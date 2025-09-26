@@ -1,0 +1,47 @@
+<div *ngIf="specialist" class="relative min-h-screen bg-white py-16 px-6">
+
+    <!-- Card principale -->
+    <div class="max-w-4xl mx-auto bg-white rounded-3xl shadow-2xl p-10 flex flex-col items-center animate-fadeIn border border-gray-100">
+  
+      <!-- Foto specialist -->
+      <div class="flex justify-center mb-8">
+        <img [src]="specialist.image_url || 'https://via.placeholder.com/300x400'"
+             [alt]="specialist.name"
+             class="w-56 h-80 object-cover rounded-xl shadow-lg transition-transform duration-300 hover:scale-105">
+      </div>
+  
+      <!-- Nome + specialità -->
+      <h1 class="text-5xl font-extrabold tracking-tight text-blue-800 text-center mb-2">
+        {{ specialist.name }}
+      </h1>
+      <p class="italic text-blue-600 text-lg text-center mb-6">
+        Specialista in {{ specialist.specialty }}
+      </p>
+  
+      <!-- Biografia -->
+      <p class="text-gray-700 text-lg leading-relaxed text-center mb-8">
+        {{ specialist.bio }}
+      </p>
+  
+      <!-- Divider -->
+      <div class="border-t border-gray-200 w-full mb-8"></div>
+  
+      <!-- CTA Buttons -->
+      <div class="flex flex-wrap justify-center gap-6 mb-12">
+        <button class="px-6 py-3 rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-700 shadow-md transition flex items-center gap-2">
+          <i class="lucide lucide-book-open"></i> Contatta
+        </button>
+        <button class="px-6 py-3 rounded-xl bg-blue-500 text-white font-medium hover:bg-blue-600 shadow-md transition flex items-center gap-2">
+          <i class="lucide lucide-download"></i> Prenota appuntamento
+        </button>
+      </div>
+    </div>
+  
+    <!-- Sezione “Altri specialisti consigliati” -->
+    <div class="max-w-6xl mx-auto mt-16">
+      <h2 class="text-3xl font-bold text-blue-800 mb-6 text-center">Cerchi un altro specialista? </h2>
+      <div class="flex overflow-x-auto gap-6 px-4 py-4">
+        <app-specialist-card *ngFor="let s of recommendedSpecialists" [specialist]="s" class="flex-shrink-0 w-64 h-full"></app-specialist-card>
+      </div>
+    </div>
+</div>

@@ -1,0 +1,26 @@
+<div class="min-h-screen bg-white py-20 px-6">
+
+  <!-- Hero -->
+  <div class="text-center max-w-3xl mx-auto mb-16">
+    <h1 class="text-4xl sm:text-5xl font-bold text-blue-800 mb-3">I nostri Ebook</h1>
+    <p class="text-gray-600 text-lg">Guide ed esercizi pensati per aiutarti a crescere personalmente e professionalmente.</p>
+  </div>
+
+  <!-- Grid Ebook -->
+  <div class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+    <app-ebook-card 
+      *ngFor="let ebook of ebooks" 
+      [ebook]="ebook"
+      class="h-full flex flex-col border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all duration-300"
+    ></app-ebook-card>
+  </div>
+
+  <!-- Sezione CTA -->
+  <div class="text-center mt-16">
+    <p class="text-gray-700 mb-4">Non trovi quello che cerchi?</p>
+    <button class="px-6 py-3 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700 shadow-sm transition">
+      Scopri tutti gli ebook
+    </button>
+  </div>
+
+</div>

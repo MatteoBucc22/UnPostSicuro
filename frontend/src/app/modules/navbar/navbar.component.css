@@ -1,0 +1,9 @@
+/* navbar.component.css */
+nav img {
+    transition: transform 0.2s;
+  }
+  
+  nav img:hover {
+    transform: scale(1.1);
+  }
+  

@@ -1,0 +1,48 @@
+<div *ngIf="ebook" class="relative min-h-screen bg-white py-16 px-6">
+
+    <!-- Card principale -->
+    <div class="max-w-4xl mx-auto bg-white rounded-3xl shadow-2xl p-10 flex flex-col items-center animate-fadeIn border border-gray-100">
+  
+      <!-- Copertina ebook -->
+      <div class="flex justify-center mb-8">
+        <img [src]="ebook.image_url || 'https://via.placeholder.com/300x400'"
+             [alt]="ebook.title"
+             class="w-56 h-80 object-cover rounded-xl shadow-lg transition-transform duration-300 hover:scale-105">
+      </div>
+  
+      <!-- Titolo + autore -->
+      <h1 class="text-5xl font-extrabold tracking-tight text-blue-800 text-center mb-2">
+        {{ ebook.title }}
+      </h1>
+      <p class="italic text-blue-600 text-lg text-center mb-6">
+        di {{ ebook.author }}
+      </p>
+  
+      <!-- Descrizione -->
+      <p class="text-gray-700 text-lg leading-relaxed text-center mb-8">
+        {{ ebook.description }}
+      </p>
+  
+      <!-- Divider -->
+      <div class="border-t border-gray-200 w-full mb-8"></div>
+  
+      <!-- CTA Buttons -->
+      <div class="flex flex-wrap justify-center gap-6 mb-12">
+        <button class="px-6 py-3 rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-700 shadow-md transition flex items-center gap-2">
+          <i class="lucide lucide-book-open"></i> Leggi estratto
+        </button>
+        <button class="px-6 py-3 rounded-xl bg-blue-500 text-white font-medium hover:bg-blue-600 shadow-md transition flex items-center gap-2">
+          <i class="lucide lucide-download"></i> Aggiungi al carrello
+        </button>
+      </div>
+    </div>
+  
+    <!-- Sezione “Altri ebook consigliati” -->
+    <div class="max-w-6xl mx-auto mt-16">
+      <h2 class="text-3xl font-bold text-blue-800 mb-6 text-center">Pensi che questa non sia la risorsa giusta per te? </h2>
+      <div class="flex overflow-x-auto gap-6 px-4 py-4">
+        <app-ebook-card *ngFor="let e of recommendedEbooks" [ebook]="e" class="flex-shrink-0 w-64 h-full"></app-ebook-card>
+      </div>
+    </div>
+  </div>
+  
