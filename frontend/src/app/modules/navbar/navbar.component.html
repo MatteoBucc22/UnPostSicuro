@@ -1,0 +1,19 @@
+<div class="relative group">
+  <button class="focus:outline-none">
+    <img src="assets/img/user.png" alt="Profilo" class="w-9 h-9 rounded-full border" />
+  </button>
+  <div class="absolute right-0 mt-2 w-40 bg-white border rounded-lg shadow-lg hidden group-hover:block">
+    <!-- Se non loggato -->
+    <ng-container *ngIf="!currentUser; else loggedIn">
+      <a routerLink="/login" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Accesso</a>
+      <a routerLink="/registration-page" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Registrazione</a>
+    </ng-container>
+
+    <!-- Se loggato -->
+    <ng-template #loggedIn>
+      <button (click)="logout()" class="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">
+        Logout
+      </button>
+    </ng-template>
+  </div>
+</div>

@@ -1,0 +1,368 @@
+/* ==========================================================================
+   Configurazione Generale e Variabili (Immaginarie)
+   ========================================================================== */
+
+   :root {
+    --primary-color: #3498db;
+    --primary-hover: #2980b9;
+    --secondary-color: #95a5a6;
+    --secondary-hover: #7f8c8d;
+    --success-color: #2ecc71;
+    --success-hover: #27ae60;
+    --dark-text: #2c3e50;
+    --light-text: #555;
+    --background-light: #f8f9fa;
+    --white: #ffffff;
+    --border-light: #eee;
+  }
+  
+  body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    margin-top: 60px; /* Spazio per la navbar fissa */
+    color: var(--light-text);
+    line-height: 1.6;
+  }
+  
+  /* ==========================================================================
+     Navbar
+     ========================================================================== */
+  
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    background-color: var(--white);
+    border-bottom: 1px solid var(--border-light);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    z-index: 1000;
+    box-sizing: border-box;
+  }
+  
+  .navbar-left .nav-link {
+    margin-right: 1rem;
+    text-decoration: none;
+    color: var(--dark-text);
+    font-weight: 500;
+    transition: color 0.2s ease;
+  }
+  
+  .navbar-left .nav-link:hover {
+    color: var(--primary-color);
+  }
+  
+  .profile-icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .profile-icon img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+  }
+  
+  .dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 45px;
+    right: 0;
+    background-color: var(--white);
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .dropdown-menu .dropdown-item {
+    padding: 0.75rem 1rem;
+    text-decoration: none;
+    color: #333;
+    display: block;
+  }
+  
+  .dropdown-menu .dropdown-item:hover {
+    background-color: #f5f5f5;
+  }
+  
+  .profile-menu:hover .dropdown-menu {
+    display: block;
+  }
+  
+  /* ==========================================================================
+     Hero Section
+     ========================================================================== */
+  
+  .hero {
+    text-align: center;
+    padding: 4rem 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .hero h1 {
+    font-size: 42px;
+    color: var(--dark-text);
+    margin-bottom: 1rem;
+    font-weight: 700;
+  }
+  
+  .hero .brand {
+    color: var(--primary-color);
+  }
+  
+  .subtitle {
+    font-size: 18px;
+    color: var(--light-text);
+    max-width: 600px;
+    margin: 0 auto 2rem auto;
+  }
+  
+  /* ==========================================================================
+     Sezione "Come Funziona" (NUOVO CSS ACCATTIVANTE)
+     ========================================================================== */
+  .how-it-works {
+    background-color: var(--background-light);
+    padding: 4rem 2rem;
+    text-align: center;
+  }
+  
+  .how-it-works h2 {
+    font-size: 32px;
+    color: var(--dark-text);
+    margin-bottom: 3rem;
+  }
+  
+  .steps-container {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  
+  .step {
+    background-color: var(--white);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    flex: 1;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .step:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  }
+  
+  .step-icon {
+    width: 60px;
+    height: 60px;
+    background-color: var(--primary-color);
+    color: var(--white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0 auto 1.5rem auto;
+  }
+  
+  .step h3 {
+    font-size: 20px;
+    color: var(--dark-text);
+    margin-bottom: 0.5rem;
+  }
+  
+  /* ==========================================================================
+     Sezione "Features" (AGGIORNATO CON FLEXBOX)
+     ========================================================================== */
+  
+  .features {
+    max-width: 900px;
+    margin: 4rem auto;
+    padding: 0 2rem;
+  }
+  
+  .feature {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 4rem;
+  }
+  
+  .feature.reverse {
+    flex-direction: row-reverse;
+  }
+  
+  .feature-img {
+    flex-shrink: 0;
+    width: 150px;
+    height: 150px;
+    object-fit: contain; /* Assicura che l'immagine non si deformi */
+  }
+  
+  .feature-content {
+    text-align: left;
+  }
+  
+  .feature.reverse .feature-content {
+    text-align: right;
+  }
+  
+  .feature h2 {
+    font-size: 28px;
+    color: var(--dark-text);
+    margin-bottom: 0.5rem;
+  }
+  
+  .feature p {
+    font-size: 16px;
+    color: var(--light-text);
+    margin-bottom: 1.5rem;
+  }
+  
+  /* ==========================================================================
+     Sezione "Testimonianze" (NUOVO CSS ACCATTIVANTE)
+     ========================================================================== */
+  
+  .testimonials {
+    background-color: var(--dark-text);
+    color: #f1f1f1;
+    padding: 5rem 2rem;
+    text-align: center;
+  }
+  
+  .testimonials h2 {
+    font-size: 32px;
+    color: var(--white);
+    margin-bottom: 3rem;
+  }
+  
+  .testimonial {
+    max-width: 650px;
+    margin: 0 auto 2rem auto;
+    background-color: rgba(255, 255, 255, 0.05); /* Sfondo traslucido */
+    padding: 2.5rem;
+    border-radius: 8px;
+    position: relative;
+    border-left: 4px solid var(--primary-color);
+  }
+  
+  /* Virgoletta decorativa */
+  .testimonial::before {
+    content: '“';
+    position: absolute;
+    top: -10px;
+    left: 15px;
+    font-size: 100px;
+    color: rgba(255, 255, 255, 0.1);
+    font-family: 'Times New Roman', serif;
+    z-index: 0;
+  }
+  
+  blockquote {
+    margin: 0;
+    font-style: italic;
+    font-size: 18px;
+    position: relative; /* Per stare sopra la virgoletta */
+    z-index: 1;
+  }
+  
+  cite {
+    display: block;
+    margin-top: 1rem;
+    text-align: right;
+    font-style: normal;
+    font-weight: bold;
+    color: var(--primary-color);
+  }
+  
+  
+  /* ==========================================================================
+     Buttons
+     ========================================================================== */
+  
+  button, .btn {
+    padding: 12px 25px;
+    font-size: 16px;
+    font-weight: 500;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    text-decoration: none; /* Per i link stilizzati come bottoni */
+    display: inline-block;
+  }
+  
+  .btn-primary-large {
+    padding: 15px 35px;
+    font-size: 18px;
+    background-color: var(--primary-color);
+    color: white;
+  }
+  .btn-primary-large:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-2px);
+  }
+  
+  .btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+  }
+  
+  .btn-primary:hover {
+    background-color: var(--primary-hover);
+  }
+  
+  .btn-secondary {
+    background-color: var(--secondary-color);
+    color: white;
+  }
+  
+  .btn-secondary:hover {
+    background-color: var(--secondary-hover);
+  }
+  
+  .btn-success {
+    background-color: var(--success-color);
+    color: white;
+  }
+  
+  .btn-success:hover {
+    background-color: var(--success-hover);
+  }
+  
+  /* ==========================================================================
+     Responsività (Media Queries)
+     ========================================================================== */
+  
+  @media (max-width: 768px) {
+    .steps-container {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .step {
+      width: 100%;
+      max-width: 400px;
+    }
+    
+    .feature, .feature.reverse {
+      flex-direction: column;
+      text-align: center;
+    }
+  
+    .feature-content, .feature.reverse .feature-content {
+      text-align: center;
+    }
+  
+    .feature-img {
+      margin-bottom: 1rem;
+    }
+  }

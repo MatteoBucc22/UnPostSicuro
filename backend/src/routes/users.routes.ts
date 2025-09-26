@@ -1,0 +1,11 @@
+import { Router } from 'express';
+import { userExists, completeRegistration } from '../controllers/users.controller';
+
+const router = Router();
+
+// router.get('/', getUsers);
+// router.post('/', addUser); // registrazione normale
+router.get('/exists/:id', userExists); // endpoint per callback Google
+router.post('/complete-registration', completeRegistration); // endpoint per dati aggiuntivi Google
+
+export default router;

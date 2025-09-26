@@ -1,0 +1,112 @@
+<div class="flex items-center justify-center min-h-screen bg-gray-50 px-4">
+    <div class="w-full max-w-3xl p-10 bg-white rounded-3xl shadow-xl border border-gray-100">
+  
+      <h2 class="text-3xl font-extrabold text-center text-blue-800 mb-6">
+        Crea il tuo account
+      </h2>
+  
+      <p class="text-center text-gray-500 mb-8">
+        Inserisci i tuoi dati qui sotto
+      </p>
+  
+      <form [formGroup]="form" (ngSubmit)="onRegister()" class="space-y-5">
+  
+        <!-- Email e Password -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="sm:col-span-2">
+            <label class="block text-gray-700 font-medium mb-1">Email</label>
+            <input formControlName="email" type="email" placeholder="esempio@email.com"
+                   class="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition"/>
+            <div *ngIf="f['email'].touched && f['email'].invalid" class="text-red-500 text-sm mt-1">
+              <div *ngIf="f['email'].errors?.['required']">L'email è richiesta</div>
+              <div *ngIf="f['email'].errors?.['email']">Inserisci un'email valida</div>
+            </div>
+          </div>
+  
+          <div class="sm:col-span-2" *ngIf="!f['providerId'].value">
+            <label class="block text-gray-700 font-medium mb-1">Password</label>
+            <input formControlName="password" type="password" placeholder="********"
+                   class="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition"/>
+            <div *ngIf="f['password'].touched && f['password'].invalid" class="text-red-500 text-sm mt-1">
+              <div *ngIf="f['password'].errors?.['required']">La password è richiesta</div>
+              <div *ngIf="f['password'].errors?.['minlength']">Minimo 6 caratteri</div>
+            </div>
+          </div>          
+        </div>
+  
+        <!-- Dati personali -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-gray-700 font-medium mb-1">Nome</label>
+            <input formControlName="name" type="text" placeholder="Nome"
+                   class="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition"/>
+            <div *ngIf="f['name'].touched && f['name'].invalid" class="text-red-500 text-sm mt-1">
+              <div *ngIf="f['name'].errors?.['required']">Il nome è richiesto</div>
+            </div>
+          </div>
+  
+          <div>
+            <label class="block text-gray-700 font-medium mb-1">Cognome</label>
+            <input formControlName="surname" type="text" placeholder="Cognome"
+                   class="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition"/>
+            <div *ngIf="f['surname'].touched && f['surname'].invalid" class="text-red-500 text-sm mt-1">
+              <div *ngIf="f['surname'].errors?.['required']">Il cognome è richiesto</div>
+            </div>
+          </div>
+  
+          <div>
+            <label class="block text-gray-700 font-medium mb-1">Data di nascita</label>
+            <input formControlName="dob" type="date"
+                   class="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition"/>
+            <div *ngIf="f['dob'].touched && f['dob'].invalid" class="text-red-500 text-sm mt-1">
+              <div *ngIf="f['dob'].errors?.['required']">La data di nascita è richiesta</div>
+            </div>
+          </div>
+  
+          <div>
+            <label class="block text-gray-700 font-medium mb-1">Sesso</label>
+            <select formControlName="gender"
+                    class="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition">
+              <option value="" disabled>Seleziona</option>
+              <option value="male">Maschio</option>
+              <option value="female">Femmina</option>
+              <option value="other">Altro</option>
+            </select>
+            <div *ngIf="f['gender'].touched && f['gender'].invalid" class="text-red-500 text-sm mt-1">
+              <div *ngIf="f['gender'].errors?.['required']">Il sesso è richiesto</div>
+            </div>
+          </div>
+  
+          <div>
+            <label class="block text-gray-700 font-medium mb-1">Telefono</label>
+            <input formControlName="phone" type="tel" placeholder="123-456-7890"
+                   class="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition"/>
+            <div *ngIf="f['phone'].touched && f['phone'].invalid" class="text-red-500 text-sm mt-1">
+              <div *ngIf="f['phone'].errors?.['pattern']">Il numero di telefono deve contenere solo numeri</div>
+            </div>
+          </div>
+  
+          <div>
+            <label class="block text-gray-700 font-medium mb-1">Città</label>
+            <input formControlName="city" type="text" placeholder="Roma"
+                   class="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition"/>
+            <div *ngIf="f['city'].touched && f['city'].invalid" class="text-red-500 text-sm mt-1">
+              <div *ngIf="f['city'].errors?.['required']">La città è richiesta</div>
+            </div>
+          </div>
+        </div>
+  
+        <button type="submit"
+                class="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-xl shadow-md hover:from-blue-700 hover:to-indigo-700 transform hover:-translate-y-0.5 transition-all">
+          Registrati
+        </button>
+  
+      </form>
+  
+      <p class="mt-6 text-center text-gray-500">
+        Hai già un account?
+        <a routerLink="/login" class="text-blue-600 font-semibold hover:underline">Accedi</a>
+      </p>
+    </div>
+  </div>
+  
