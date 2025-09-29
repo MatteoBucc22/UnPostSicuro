@@ -4,16 +4,13 @@ import {
   ROUTES,
   Router,
   loadChildren
-} from "./chunk-ZUY4MUBS.js";
+} from "./chunk-CAQYJHKG.js";
 import {
   BrowserDomAdapter,
   BrowserModule,
   EVENT_MANAGER_PLUGINS,
   EventManagerPlugin
-} from "./chunk-DDEIZUAI.js";
-import {
-  HTTP_ROOT_INTERCEPTOR_FNS
-} from "./chunk-23GCGAH7.js";
+} from "./chunk-NRENGE4I.js";
 import {
   APP_BASE_HREF,
   NullViewportScroller,
@@ -22,7 +19,10 @@ import {
   ViewportScroller,
   getDOM,
   setRootDomAdapter
-} from "./chunk-E52GFLNC.js";
+} from "./chunk-U2V4CCRU.js";
+import {
+  HTTP_ROOT_INTERCEPTOR_FNS
+} from "./chunk-SQNSBBFV.js";
 import {
   XhrFactory
 } from "./chunk-JOW5UT56.js";
@@ -61,6 +61,7 @@ import {
   makeEnvironmentProviders,
   platformCore,
   provideEnvironmentInitializer,
+  require_cjs,
   resetCompiledComponents,
   runInInjectionContext,
   setClassMetadata,
@@ -71,10 +72,7 @@ import {
   ɵɵdefineInjector,
   ɵɵdefineNgModule,
   ɵɵinject
-} from "./chunk-KBNXESTY.js";
-import {
-  require_cjs
-} from "./chunk-WGRCPX6P.js";
+} from "./chunk-J35I5SM4.js";
 import {
   __async,
   __asyncGenerator,
@@ -29603,4 +29601,4 @@ export {
    * License: MIT
    *)
 */
-//# sourceMappingURL=chunk-SNPKZ6VS.js.map
+//# sourceMappingURL=chunk-DNINBHJN.js.map
