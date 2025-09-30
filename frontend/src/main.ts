@@ -3,6 +3,7 @@ import { AppComponent } from './app/app.component';
 import { provideRouter } from '@angular/router';
 import { routes } from './app/app-routing.module';
 import { provideHttpClient, withFetch } from '@angular/common/http';
+import { appConfig } from './app/app.config';
 
 import AOS from 'aos';
 import 'aos/dist/aos.css';
@@ -12,10 +13,5 @@ AOS.init({
   once: true,
 });
 
-bootstrapApplication(AppComponent, {
-  providers: [
-    provideRouter(routes),
-    provideHttpClient(),           // 👈 provider base
-    provideHttpClient(withFetch()) // 👈 fetch adapter
-  ]
-});
+bootstrapApplication(AppComponent, appConfig) // Passa la configurazione qui
+  .catch((err) => console.error(err));
