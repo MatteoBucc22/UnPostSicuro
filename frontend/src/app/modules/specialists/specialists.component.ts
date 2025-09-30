@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { SpecialistCardComponent } from '../specialist-card/specialist-card.component';
-import { AuthService } from '../auth/auth.services'; // importa il servizio auth
+// import { AuthService } from '../auth/auth.services'; // importa il servizio auth
 import { User } from '@supabase/supabase-js';
 
 interface Specialist {
@@ -23,16 +23,16 @@ interface Specialist {
 })
 export class SpecialistsComponent implements OnInit {
   specialists: Specialist[] = [];
-  currentUser: User | null = null; // tiene traccia dell'utente loggato
+  currentUser: User | null | undefined 
 
-  constructor(private http: HttpClient, private authService: AuthService) {}
+  constructor(private http: HttpClient, /*private authService: AuthService*/) {}
 
   ngOnInit(): void {
     // Sottoscrizione al BehaviorSubject di AuthService
-    this.authService.currentUser.subscribe(user => {
-      this.currentUser = user;
-      console.log('Utente loggato:', user);
-    });
+    // this.authService.currentUser.subscribe(user => {
+    //   this.currentUser = user;
+    //   console.log('Utente loggato:', user);
+    // });
 
     // Carica gli specialisti dal backend
     this.fetchSpecialists().subscribe({
