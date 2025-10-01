@@ -1,29 +1,35 @@
-<nav class="fixed top-0 left-0 w-full bg-white border-b border-gray-200 shadow-sm z-50">
+<nav class="fixed top-0 left-0 w-full bg-[#FAFAFA] border-b border-gray-200 shadow-sm z-50">
   <div class="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
-    
+
     <!-- Link principali -->
     <div class="flex items-center space-x-6">
-      <a routerLink="/" class="flex items-center text-blue-600 font-bold hover:text-blue-700 space-x-3">
+      <a routerLink="/" class="flex items-center text-[#5EADB1] font-bold hover:text-[#60BFB6] space-x-3">
         <img src="assets/img/logo.jpeg" alt="Logo" class="w-12 h-12"/>
         <span class="text-xl">UnPostoSicuro</span>
       </a>
-
-      <!-- Gli altri link allineati verticalmente -->
-      <a routerLink="/test" class="flex items-center text-gray-700 font-medium hover:text-blue-600">Test</a>
-      <a routerLink="/chatbot" class="flex items-center text-gray-700 font-medium hover:text-blue-600">Serena</a>
-      <a routerLink="/ebooks" class="flex items-center text-gray-700 font-medium hover:text-blue-600">Ebooks</a>
-      <a routerLink="/specialists" class="flex items-center text-gray-700 font-medium hover:text-blue-600">Specialisti</a>
+      <a routerLink="/test" class="flex items-center text-gray-700 font-medium hover:text-[#5EADB1]">Test</a>
+      <a routerLink="/chatbot" class="flex items-center text-gray-700 font-medium hover:text-[#60BFB6]">Serena</a>
+      <a routerLink="/ebooks" class="flex items-center text-gray-700 font-medium hover:text-[#5EADB1]">Ebooks</a>
+      <a routerLink="/specialists" class="flex items-center text-gray-700 font-medium hover:text-[#60BFB6]">Specialisti</a>
     </div>
 
     <!-- Profilo -->
     <div class="relative group">
       <button class="focus:outline-none">
-        <img src="assets/img/user.png" alt="Profilo" class="w-9 h-9 rounded-full border" />
+        <img src="assets/img/user.png" alt="Profilo" class="w-9 h-9 rounded-full border border-[#5EADB1]" />
       </button>
-      <div class="absolute right-0 mt-2 w-40 bg-white border rounded-lg shadow-lg hidden group-hover:block">
-        <a routerLink="/login" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Accesso</a>
-        <a routerLink="/registration-page" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Registrazione</a>
-      </div>
+      <div class="absolute right-0 mt-2 w-40 bg-[#FAFAFA] border rounded-lg shadow-lg hidden group-hover:block">
+        <ng-container *ngIf="isLoggedIn(); else guest">
+          <span class="block px-4 py-2 text-gray-700">Ciao, {{ user?.name }}</span>
+          <button (click)="logout()" class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-[#5EADB1]/10">
+            Logout
+          </button>
+        </ng-container>
+        <ng-template #guest>
+          <a routerLink="/login" class="block px-4 py-2 text-gray-700 hover:bg-[#60BFB6]/10">Accesso</a>
+          <a routerLink="/registration-page" class="block px-4 py-2 text-gray-700 hover:bg-[#5EADB1]/10">Registrazione</a>
+        </ng-template>
+      </div>      
     </div>
 
   </div>

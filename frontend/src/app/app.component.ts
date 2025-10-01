@@ -17,7 +17,7 @@ import { CommonModule } from '@angular/common'; // <-- 2. IMPORTA CommonModule P
       Contenitore principale che attende la fine del caricamento.
       Mostra il contenuto solo quando lo stato NON è più 'undefined'.
     -->
-    <div *ngIf="(authService.currentUser | async) !== undefined; else loadingScreen">
+    <div *ngIf="(authService.currentAppUser | async) !== undefined; else loadingScreen">
 
       <!-- La tua Navbar -->
       <app-navbar></app-navbar>
@@ -30,8 +30,6 @@ import { CommonModule } from '@angular/common'; // <-- 2. IMPORTA CommonModule P
       <div class="pt-28 min-h-screen">
         <router-outlet></router-outlet>
         
-        <!-- Componente di debug, puoi lasciarlo o toglierlo -->
-        <app-debug-supabase></app-debug-supabase>
       </div>
 
       <!-- Aggiungi un footer se lo desideri -->
@@ -57,4 +55,9 @@ import { CommonModule } from '@angular/common'; // <-- 2. IMPORTA CommonModule P
 export class AppComponent {
   // 5. INIETTA L'AUTHSERVICE NEL COSTRUTTORE E RENDILO PUBBLICO
   constructor(public authService: AuthService) {}
+
+  ngOnInit(): void {
+    // Esponi temporaneamente authService nella console del browser
+    (window as any).authService = this.authService;
+  }
 }
