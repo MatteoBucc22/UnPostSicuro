@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { EbookCardComponent } from './ebook-card.component';
+import { HttpClientModule } from '@angular/common/http';
 
 interface Ebook {
   id: string;
@@ -17,7 +18,7 @@ interface Ebook {
 @Component({
   selector: 'app-ebook-detail',
   standalone: true,
-  imports: [CommonModule, EbookCardComponent], 
+  imports: [CommonModule, EbookCardComponent, HttpClientModule], 
   templateUrl: './ebook-detail.component.html',
   styleUrls: ['./ebook-detail.component.css']
 })
