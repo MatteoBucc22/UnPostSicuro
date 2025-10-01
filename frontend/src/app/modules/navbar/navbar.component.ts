@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { AuthService } from '../auth/auth.services';
-import { User } from '@supabase/supabase-js';
+import { AuthService, AppUser } from '../auth/auth.services';
 import { CommonModule } from "@angular/common";
 
 @Component({
@@ -12,19 +11,34 @@ import { CommonModule } from "@angular/common";
   styleUrls: ['./navbar.component.css'],
 })
 export class NavbarComponent implements OnInit {
-  user: User | null | undefined;
+  // undefined = caricamento in corso, null = non loggato, AppUser = loggato
+  user: AppUser | null | undefined;
 
   constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
-    this.authService.currentUser.subscribe((user) => {
-      console.log('[NavbarComponent] Stato utente aggiornato:', user);
-      this.user = user;
+    this.authService.currentAppUser.subscribe(async (user) => {
+      if (user === undefined) {
+        // sessione in caricamento, evita di mostrare guest
+        this.user = undefined;
+      } else if (user === null) {
+        // nessun utente loggato
+        this.user = null;
+      } else {
+        // utente loggato, assegna direttamente
+        this.user = user;
+      }
+      console.log('[NavbarComponent] AppUser aggiornato:', this.user);
     });
   }
 
   logout(): void {
-    console.log('[NavbarComponent] Logout richiesto.');
     this.authService.logout();
+    this.user = null; // opzionale, sarà comunque aggiornato dal BehaviorSubject
+  }
+
+  // funzione helper per template
+  isLoggedIn(): boolean {
+    return this.user !== null && this.user !== undefined;
   }
 }

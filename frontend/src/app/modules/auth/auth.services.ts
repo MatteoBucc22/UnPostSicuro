@@ -1,78 +1,105 @@
+
 import { Injectable } from '@angular/core';
-import { createClient, SupabaseClient, User, Session } from '@supabase/supabase-js';
+import { createClient, SupabaseClient, User } from '@supabase/supabase-js';
 import { environment } from '../../../environments/environment';
 import { BehaviorSubject } from 'rxjs';
+
+export interface AppUser {
+  id: string;
+  email: string;
+  name: string;
+  surname: string;
+  city?: string;
+  gender?: string;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private supabase: SupabaseClient;
-
-  // Stato utente:
-  // undefined = Lo stato iniziale, sto ancora caricando/verificando la sessione.
-  // null      = Verifica completata, l'utente non è loggato.
-  // User      = Verifica completata, l'utente è loggato.
-  public currentUser = new BehaviorSubject<User | null | undefined>(undefined);
+  public currentAppUser = new BehaviorSubject<AppUser | null | undefined>(undefined);
 
   constructor() {
-    console.log('[AuthService] Inizializzazione del servizio...');
     this.supabase = createClient(environment.supabaseUrl, environment.supabaseAnonKey);
-  
-    // Recupera la sessione iniziale
-    this.supabase.auth.getSession().then(({ data, error }) => {
-      if (error) {
-        console.error('[AuthService] Errore recupero sessione iniziale:', error);
-        this.currentUser.next(null);
+    this.init();
+  }
+
+  private async init() {
+    // Recupera sessione iniziale
+    const { data } = await this.supabase.auth.getSession();
+    const user = data.session?.user ?? null;
+
+    if (user) {
+      const appUser = await this.fetchAppUser(user.id);
+      this.currentAppUser.next(appUser);
+    } else {
+      this.currentAppUser.next(null);
+    }
+
+    // Ascolta cambiamenti di sessione
+    this.supabase.auth.onAuthStateChange(async (_event, session) => {
+      const user = session?.user ?? null;
+      if (user) {
+        const appUser = await this.fetchAppUser(user.id);
+        this.currentAppUser.next(appUser);
       } else {
-        console.log('[AuthService] Sessione iniziale:', data.session);
-        this.currentUser.next(data.session?.user ?? null);
+        this.currentAppUser.next(null);
       }
     });
-  
-    // Ascolta i cambiamenti successivi
-    this.supabase.auth.onAuthStateChange((event, session) => {
-      console.log(`[AuthService] Evento onAuthStateChange: ${event}`, session);
-      this.currentUser.next(session?.user ?? null);
-    });
   }
+
+  private async fetchAppUser(userId: string) {
+    // Non tipizzare il primo argomento (tabella) e non usare T = AppUser
+    const { data, error } = await this.supabase
+      .from('users')            // <- senza generics qui
+      .select('*')               // <- senza tipizzazione complicata
+      .eq('id', userId)
+      .single();
   
-
-  // ngOnInit non è più necessario per l'inizializzazione della sessione.
-  // Rimosso.
-
-  // initSession() non è più necessario, perché onAuthStateChange fa già tutto.
-  // Rimosso.
+    if (error) throw error;
+  
+    // Forza il tipo qui, non prima
+    return data as AppUser;
+  }
 
   async login(email: string, password: string) {
     const { data, error } = await this.supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
-    // Non è necessario fare this.currentUser.next() qui,
-    // perché onAuthStateChange verrà attivato automaticamente da Supabase.
     return { session: data.session, user: data.user };
   }
 
   async register(email: string, password: string) {
     const { data, error } = await this.supabase.auth.signUp({ email, password });
     if (error) throw error;
-    // Anche qui, onAuthStateChange si occuperà di aggiornare lo stato.
     return { session: data.session, user: data.user };
   }
 
   async loginWithGoogle() {
-    // Gestisci il caso in cui 'window' non sia definito (SSR)
     if (typeof window === 'undefined') {
-      console.warn('[AuthService] Tentativo di login con Google in ambiente non-browser (SSR). Operazione annullata.');
+      console.warn('[AuthService] Login Google in ambiente non-browser annullato.');
       return;
     }
     await this.supabase.auth.signInWithOAuth({
       provider: 'google',
-      options: { redirectTo: window.location.origin + '/callback' } // Assicurati che '/callback' sia una rotta valida
+      options: { redirectTo: window.location.origin + '/callback' }
     });
   }
 
   async logout() {
     await this.supabase.auth.signOut();
-    // onAuthStateChange imposterà currentUser a null automaticamente.
+    this.currentAppUser.next(null);
   }
+
+  async clearSession() {
+    try {
+      await this.supabase.auth.signOut(); // elimina la sessione corrente
+      this.currentAppUser.next(null);     // resetta lo stato locale
+      console.log('[AuthService] Sessione rimossa.');
+    } catch (error) {
+      console.error('[AuthService] Errore rimozione sessione:', error);
+    }
+  }
+
 }
+

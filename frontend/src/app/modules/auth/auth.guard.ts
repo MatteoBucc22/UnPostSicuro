@@ -12,7 +12,7 @@ export class AuthGuard implements CanActivate {
   constructor(private authService: AuthService, private router: Router) {}
 
   canActivate(): Observable<boolean> {
-    return this.authService.currentUser.pipe(
+    return this.authService.currentAppUser.pipe(
       // 1. Filtra: Ignora il valore iniziale 'undefined' e attendi
       //    che lo stato sia definito (o User o null).
       filter(userState => userState !== undefined),
