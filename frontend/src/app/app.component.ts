@@ -4,12 +4,13 @@ import { NavbarComponent } from './modules/navbar/navbar.component';
 import { DebugSupabaseComponent } from './test.component';
 import { AuthService } from './modules/auth/auth.services'; // <-- 1. IMPORTA IL SERVIZIO
 import { CommonModule } from '@angular/common'; // <-- 2. IMPORTA CommonModule PER *ngIf e | async
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   // 3. AGGIUNGI CommonModule AGLI IMPORTS
-  imports: [CommonModule, RouterOutlet, NavbarComponent, DebugSupabaseComponent],
+  imports: [CommonModule, RouterOutlet, NavbarComponent, DebugSupabaseComponent, HttpClientModule],
 
   // 4. MODIFICA IL TEMPLATE INLINE CON LA LOGICA DI CARICAMENTO
   template: `

@@ -1,14 +1,18 @@
 <div class="bg-[#FAFAFA]">
 
+  <div class="w-full bg-[#5EADB1] text-white py-2 overflow-hidden relative">
+    <div class="whitespace-nowrap animate-marquee px-6 text-center font-semibold">
+      📚 Acquista qualsiasi ebook a 29,99 € e ricevi una visita dallo psicologo inclusa! | 💡 Con l'acquisto ottieni anche un voucher per 10 sedute a 35 €.
+    </div>
+  </div>
+
   <!-- Hero -->
   <header class="text-center max-w-5xl mx-auto pt-20 pb-12 px-6">
-    <!-- Logo sopra il nome -->
     <div class="flex flex-col justify-center items-center mb-6">
       <img src="assets/img/logo.jpeg" alt="Logo" class="w-32 h-32 mb-4">
       <span class="text-5xl md:text-6xl font-bold text-[#5EADB1]">UnPostoSicuro</span>
     </div>
   
-    <!-- Titolo -->
     <h1 class="text-5xl md:text-6xl font-bold text-black mb-4">
       Il primo passo verso il tuo benessere inizia qui.
     </h1>
@@ -20,6 +24,22 @@
     </a>
   </header>
   
+  <!-- Banner Promozionali -->
+  <div class="max-w-5xl mx-auto px-6 py-6 space-y-4">
+    <div class="flex flex-col md:flex-row items-center justify-between bg-[#5EADB1]/10 border-l-4 border-[#5EADB1] rounded-xl p-4 md:p-6 shadow-sm hover:shadow-md hover:translate-y-1 transition-all duration-300">
+      <p class="text-[#5EADB1] font-semibold text-base md:text-lg">
+        Acquista qualsiasi ebook a <span class="font-bold">29,99 €</span> e ricevi una <span class="font-bold">visita dallo psicologo inclusa</span>.
+      </p>
+      <span class="hidden md:inline text-[#60BFB6] font-bold text-lg">🎁</span>
+    </div>
+
+    <div class="flex flex-col md:flex-row items-center justify-between bg-[#60BFB6]/10 border-l-4 border-[#60BFB6] rounded-xl p-4 md:p-6 shadow-sm hover:shadow-md hover:translate-y-1 transition-all duration-300">
+      <p class="text-[#60BFB6] font-semibold text-base md:text-lg">
+        Con l'acquisto ricevi anche un <span class="font-bold">voucher per 10 sedute a 35 €</span> con uno dei nostri specialisti.
+      </p>
+      <span class="hidden md:inline text-[#5EADB1] font-bold text-lg">💡</span>
+    </div>
+  </div>
 
   <!-- Sezione Come Funziona -->
   <section class="bg-slate-50 py-16 px-6 text-center">
@@ -54,7 +74,7 @@
       <img src="assets/img/test.png" alt="Icona di un percorso guidato" class="w-36 h-36 object-contain flex-shrink-0">
       <div class="text-center md:text-left">
         <h2 class="text-2xl font-bold text-[#60BFB6] mb-2">Un punto di partenza, non un giudizio.</h2>
-        <p class="text-gray-600 mb-5">A volte è difficile dare un nome a ciò che sentiamo. Questo breve percorso guidato è pensato per aiutarti a fare chiarezza. Le tue risposte, strettamente confidenziali, ci guideranno a suggerirti le risorse più in linea con le tue esigenze attuali.</p>
+        <p class="text-gray-600 mb-5">Questo breve percorso guidato è pensato per aiutarti a fare chiarezza. Le tue risposte, strettamente confidenziali, ci guideranno a suggerirti le risorse più in linea con le tue esigenze attuali.</p>
         <a routerLink="/test" class="inline-block bg-[#5EADB1] text-white font-semibold py-2.5 px-5 rounded-lg hover:bg-[#60BFB6] transition-colors">Inizia il Test Guidato</a>
       </div>
     </section>
@@ -65,7 +85,7 @@
       <div class="text-center md:text-right">
         <h2 class="text-2xl font-bold text-[#5EADB1] mb-2">L'orientamento che cerchi, in pochi istanti.</h2>
         <p class="text-gray-600 mb-5">
-          Non sai da dove iniziare? Serena è il nostro assistente intelligente progettato per analizzare le tue parole in modo confidenziale. In base a ciò che esprimi, ti fornirà un suggerimento mirato e personalizzato: <strong class="font-bold">l'ebook più adatto</strong> per approfondire e <strong class="font-bold">lo specialista del nostro team più indicato</strong> per un percorso di supporto.
+          Serena è il nostro assistente intelligente progettato per analizzare le tue parole in modo confidenziale. Ti fornirà un suggerimento mirato e personalizzato: <strong class="font-bold">l'ebook più adatto</strong> e <strong class="font-bold">lo specialista più indicato</strong>.
         </p>
         <a routerLink="/chatbot" class="inline-block bg-[#60BFB6] text-white font-semibold py-2.5 px-5 rounded-lg hover:bg-[#5EADB1] transition-colors">
           Trova il mio percorso
@@ -77,9 +97,9 @@
 
   <!-- Sezione Ebook -->
   <section class="bg-slate-50 py-16 px-6">
-    <div class="text-center max-w-3xl mx-auto">
+    <div class="text-center max-w-3xl mx-auto mb-10">
       <h2 class="text-3xl font-bold text-[#60BFB6] mb-4">Strumenti pratici per la tua crescita</h2>
-      <p class="text-lg text-gray-600 mb-10">La nostra libreria digitale è curata da psicologi. Troverai guide, esercizi e approfondimenti per comprendere meglio te stesso e sviluppare strategie concrete.</p>
+      <p class="text-lg text-gray-600">La nostra libreria digitale è curata da psicologi. Troverai guide, esercizi e approfondimenti per comprendere meglio te stesso e sviluppare strategie concrete.</p>
     </div>
     
     <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl">
@@ -93,43 +113,35 @@
     </div>
   </section>
 
-
   <!-- Sezione Specialisti -->
   <section class="bg-slate-50 py-16 px-6">
-    <div class="text-center max-w-3xl mx-auto">
+    <div class="text-center max-w-3xl mx-auto mb-10">
       <h2 class="text-3xl font-bold text-[#5EADB1] mb-4">I nostri specialisti</h2>
-      <p class="text-lg text-gray-600 mb-10">
+      <p class="text-lg text-gray-600">
         Connettiti con professionisti qualificati per ricevere supporto personalizzato e risorse dedicate al tuo benessere.
       </p>
     </div>
 
     <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl">
-      <app-specialist-card 
-        *ngFor="let specialist of specialists" 
-        [specialist]="specialist">
-      </app-specialist-card>
+      <app-specialist-card *ngFor="let specialist of specialists" [specialist]="specialist"></app-specialist-card>
     </div>    
 
     <div class="text-center mt-10">
-      <a routerLink="/specialists" 
-        class="inline-block bg-[#60BFB6] text-white font-bold py-2.5 px-7 rounded-lg shadow-md hover:bg-[#5EADB1] transition-all duration-300">
+      <a routerLink="/specialists" class="inline-block bg-[#60BFB6] text-white font-bold py-2.5 px-7 rounded-lg shadow-md hover:bg-[#5EADB1] transition-all duration-300">
         Esplora tutti gli specialisti
       </a>
     </div>
   </section>
 
-
-  <!-- Sezione Testimonianze -->
+  <!-- Testimonianze -->
   <section class="bg-slate-800 py-16 px-6 text-center">
     <h2 class="text-3xl font-bold text-[#60BFB6] mb-10">Le parole di chi ha iniziato il suo percorso</h2>
     <div class="space-y-6 max-w-xl mx-auto">
-      <!-- Testimonianza 1 -->
       <div data-aos="fade-up" class="bg-slate-700/50 p-6 rounded-lg border-l-4 border-[#5EADB1] text-left relative">
         <span class="absolute top-0 left-3 text-7xl font-serif text-slate-600 opacity-50 select-none">“</span>
         <blockquote class="relative z-10 italic text-gray-300 text-base">"Ero scettico, ma già il test iniziale mi ha dato degli spunti su cui non avevo mai riflettuto. Mi sono sentito capito per la prima volta dopo tanto tempo."</blockquote>
         <cite class="block mt-2 text-right font-bold text-[#60BFB6] not-italic text-sm">- Marco, 34 anni</cite>
       </div>
-      <!-- Testimonianza 2 -->
       <div data-aos="fade-up" data-aos-delay="100" class="bg-slate-700/50 p-6 rounded-lg border-l-4 border-[#60BFB6] text-left relative">
         <span class="absolute top-0 left-3 text-7xl font-serif text-slate-600 opacity-50 select-none">“</span>
         <blockquote class="relative z-10 italic text-gray-300 text-base">"Poter parlare con il chatbot nel cuore della notte, senza sentirmi giudicata, è stato un sollievo incredibile. Un piccolo passo che mi ha dato il coraggio di chiederne uno più grande."</blockquote>

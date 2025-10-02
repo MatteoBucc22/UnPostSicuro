@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteSpecialist = exports.addSpecialist = exports.getSpecialists = void 0;
+exports.getSpecialistsbyId = exports.deleteSpecialist = exports.addSpecialist = exports.getSpecialists = void 0;
 const supabaseClient_1 = require("../database/supabaseClient");
 const getSpecialists = async (req, res) => {
     const { data, error } = await supabaseClient_1.supabase.from('specialists').select('*');
@@ -31,4 +31,16 @@ const deleteSpecialist = async (req, res) => {
     res.json(data);
 };
 exports.deleteSpecialist = deleteSpecialist;
+const getSpecialistsbyId = async (req, res) => {
+    const { id } = req.params;
+    const { data, error } = await supabaseClient_1.supabase
+        .from('specialists')
+        .select('*')
+        .eq('id', id)
+        .single();
+    if (error)
+        return res.status(404).json({ error: error.message });
+    res.json(data);
+};
+exports.getSpecialistsbyId = getSpecialistsbyId;
 //# sourceMappingURL=specialists.controller.js.map

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { EbookCardComponent } from '../ebook-card/ebook-card.component';
+import { RouterLink } from '@angular/router';
 
 interface Ebook {
   id: string;
@@ -16,7 +17,7 @@ interface Ebook {
 @Component({
   selector: 'app-ebooks',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, EbookCardComponent ],
+  imports: [CommonModule, HttpClientModule, EbookCardComponent, RouterLink], 
   templateUrl: './ebooks.component.html',
   styleUrls: ['./ebooks.component.css']
 })

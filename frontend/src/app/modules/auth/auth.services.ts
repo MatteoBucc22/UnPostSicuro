@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient, User } from '@supabase/supabase-js';
 import { environment } from '../../../environments/environment';
 import { BehaviorSubject } from 'rxjs';
+import { v4 as uuidv4 } from 'uuid'; // npm install uuid
 
 export interface AppUser {
   id: string;
@@ -26,28 +27,34 @@ export class AuthService {
   }
 
   private async init() {
-    // Recupera sessione iniziale
     const { data } = await this.supabase.auth.getSession();
     const user = data.session?.user ?? null;
-
+  
     if (user) {
       const appUser = await this.fetchAppUser(user.id);
       this.currentAppUser.next(appUser);
+  
+      // Salva l'userId in localStorage
+      localStorage.setItem('userId', appUser.id);
     } else {
       this.currentAppUser.next(null);
+      localStorage.removeItem('userId');
     }
-
+  
     // Ascolta cambiamenti di sessione
     this.supabase.auth.onAuthStateChange(async (_event, session) => {
       const user = session?.user ?? null;
       if (user) {
         const appUser = await this.fetchAppUser(user.id);
         this.currentAppUser.next(appUser);
+        localStorage.setItem('userId', appUser.id);
       } else {
         this.currentAppUser.next(null);
+        localStorage.removeItem('userId');
       }
     });
   }
+  
 
   private async fetchAppUser(userId: string) {
     // Non tipizzare il primo argomento (tabella) e non usare T = AppUser
@@ -66,14 +73,39 @@ export class AuthService {
   async login(email: string, password: string) {
     const { data, error } = await this.supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
+  
+    const user = data.user;
+    if (user) {
+      const appUser = await this.fetchAppUser(user.id);
+      this.currentAppUser.next(appUser);
+      localStorage.setItem('userId', appUser.id);
+  
+      // Inizializza cartItem se non esiste
+      console.log("TEST");
+      await this.initCartForUser(appUser.id);
+    }
+  
     return { session: data.session, user: data.user };
   }
+  
 
   async register(email: string, password: string) {
     const { data, error } = await this.supabase.auth.signUp({ email, password });
     if (error) throw error;
+  
+    const user = data.user;
+    if (user) {
+      const appUser = await this.fetchAppUser(user.id);
+      this.currentAppUser.next(appUser);
+      localStorage.setItem('userId', appUser.id);
+  
+      // Crea subito la riga del carrello
+      await this.initCartForUser(appUser.id);
+    }
+  
     return { session: data.session, user: data.user };
   }
+  
 
   async loginWithGoogle() {
     if (typeof window === 'undefined') {
@@ -101,5 +133,39 @@ export class AuthService {
     }
   }
 
+
+
+  private async initCartForUser(userId: string) {
+    console.log("Inizializzazione cartItem per userId:", userId);
+  
+    const { data, error } = await this.supabase
+      .from('cart_item') // 🔹 usa snake_case
+      .select('*')
+      .eq('user_id', userId)
+      .single();
+  
+    if (error && error.code === 'PGRST116') {
+      const newCartItem = {
+        id: uuidv4(),
+        user_id: userId,
+        ebook_id: null,
+        specialist_id: null
+      };
+  
+      const { data: inserted, error: insertError } = await this.supabase
+        .from('cart_item') // 🔹 usa snake_case
+        .insert(newCartItem)
+        .select()
+        .single();
+  
+      if (insertError) console.error('Errore creazione cartItem:', insertError);
+      else console.log('CartItem creato:', inserted);
+    } else if (error) {
+      console.error('Errore fetch cartItem:', error);
+    } else {
+      console.log('CartItem già esistente:', data);
+    }
+  }
+  
 }
 

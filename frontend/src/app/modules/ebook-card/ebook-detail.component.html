@@ -1,48 +1,71 @@
-<div *ngIf="ebook" class="relative min-h-screen bg-white py-16 px-6">
+<div *ngIf="ebook" class="relative min-h-screen bg-gradient-to-b from-[#FAFAFA] via-white to-[#FAFAFA] py-16 px-6">
 
-    <!-- Card principale -->
-    <div class="max-w-4xl mx-auto bg-white rounded-3xl shadow-2xl p-10 flex flex-col items-center animate-fadeIn border border-gray-100">
-  
-      <!-- Copertina ebook -->
-      <div class="flex justify-center mb-8">
-        <img [src]="ebook.image_url || 'https://via.placeholder.com/300x400'"
-             [alt]="ebook.title"
-             class="w-56 h-80 object-cover rounded-xl shadow-lg transition-transform duration-300 hover:scale-105">
-      </div>
-  
-      <!-- Titolo + autore -->
-      <h1 class="text-5xl font-extrabold tracking-tight text-blue-800 text-center mb-2">
-        {{ ebook.title }}
-      </h1>
-      <p class="italic text-blue-600 text-lg text-center mb-6">
-        di {{ ebook.author }}
-      </p>
-  
-      <!-- Descrizione -->
-      <p class="text-gray-700 text-lg leading-relaxed text-center mb-8">
-        {{ ebook.description }}
-      </p>
-  
-      <!-- Divider -->
-      <div class="border-t border-gray-200 w-full mb-8"></div>
-  
-      <!-- CTA Buttons -->
-      <div class="flex flex-wrap justify-center gap-6 mb-12">
-        <button class="px-6 py-3 rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-700 shadow-md transition flex items-center gap-2">
-          <i class="lucide lucide-book-open"></i>Leggi estratto
-        </button>
-        <button class="px-6 py-3 rounded-xl bg-blue-500 text-white font-medium hover:bg-blue-600 shadow-md transition flex items-center gap-2">
-          <i class="lucide lucide-download"></i> Aggiungi al carrello
-        </button>
-      </div>
+  <!-- Card principale -->
+  <div class="max-w-4xl mx-auto bg-white rounded-3xl shadow-2xl p-10 flex flex-col items-center animate-fadeIn border border-[#E2E8F0]">
+
+    <!-- Copertina ebook -->
+    <div class="flex justify-center mb-8">
+      <img [src]="ebook.image_url || 'https://via.placeholder.com/300x400'"
+           [alt]="ebook.title"
+           class="w-56 h-80 object-cover rounded-2xl shadow-xl transition-transform duration-300 hover:scale-105">
     </div>
-  
-    <!-- Sezione “Altri ebook consigliati” -->
-    <div class="max-w-6xl mx-auto mt-16">
-      <h2 class="text-3xl font-bold text-blue-800 mb-6 text-center">Pensi che questa non sia la risorsa giusta per te? </h2>
-      <div class="flex overflow-x-auto gap-6 px-4 py-4">
-        <app-ebook-card *ngFor="let e of recommendedEbooks" [ebook]="e" class="flex-shrink-0 w-64 h-full"></app-ebook-card>
-      </div>
+
+    <!-- Titolo + autore -->
+    <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-[#5EADB1] to-[#60BFB6] text-center mb-2">
+      {{ ebook.title }}
+    </h1>
+    <p class="italic text-[#5EADB1] text-lg text-center mb-6">
+      di {{ ebook.author }}
+    </p>
+
+    <!-- Descrizione -->
+    <p class="text-gray-700 text-lg leading-relaxed text-center mb-8">
+      {{ ebook.description }}
+    </p>
+
+    <!-- Divider -->
+    <div class="border-t border-[#E2E8F0] w-full mb-8"></div>
+
+    <!-- CTA Buttons -->
+    <div class="flex flex-wrap justify-center gap-6 mb-12">
+      <button class="px-6 py-3 rounded-2xl bg-[#5EADB1] text-white font-semibold hover:bg-[#60BFB6] shadow-lg transition transform hover:-translate-y-1 flex items-center gap-2">
+        <i class="lucide lucide-book-open"></i> Leggi estratto
+      </button>
+      <button 
+        (click)="addToCart()" 
+        [disabled]="isAdding"
+        class="px-6 py-3 rounded-2xl bg-[#60BFB6] text-white font-semibold 
+              hover:bg-[#5EADB1] shadow-lg transition transform hover:-translate-y-1 
+              flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+        <i class="lucide lucide-download"></i> 
+        {{ isAdding ? 'Aggiungo...' : 'Aggiungi al carrello' }}
+      </button>
+
     </div>
   </div>
-  
+
+  <!-- Sezione “Altri ebook consigliati” -->
+  <div class="max-w-6xl mx-auto mt-16">
+    <h2 class="text-3xl font-bold text-[#5EADB1] mb-6 text-center">
+      Non è la risorsa giusta per te?
+    </h2>
+    <div class="flex overflow-x-auto gap-6 px-4 py-4 scrollbar-thin scrollbar-thumb-[#5EADB1]/50 scrollbar-track-transparent">
+      <app-ebook-card *ngFor="let e of recommendedEbooks" [ebook]="e" class="flex-shrink-0 w-64 h-full hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300"></app-ebook-card>
+    </div>
+  </div>
+
+</div>
+
+<!-- Tailwind Scrollbar -->
+<style>
+  .scrollbar-thin::-webkit-scrollbar {
+    height: 6px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: #5EADB1;
+    border-radius: 9999px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+</style>

@@ -1,0 +1,121 @@
+<div class="min-h-screen bg-gradient-to-br from-[#FAFAFA] to-[#E6F6F6]">
+  
+    <!-- HEADER -->
+    <header class="bg-gradient-to-r from-[#5EADB1] to-[#60BFB6] p-10 text-center text-white shadow-lg">
+      <img [src]="user?.avatar_url || 'assets/img/user.png'" 
+           alt="Avatar" 
+           class="w-32 h-32 mx-auto rounded-full border-4 border-white shadow-lg ring-4 ring-[#ffffff40] mb-4">
+      <h1 class="text-3xl font-bold">{{ user?.name }} {{ user?.surname }}</h1>
+      <h2 class="text-lg opacity-90">{{ user?.email }}</h2>
+    </header>
+  
+    <!-- CONTENUTO -->
+    <main class="max-w-5xl mx-auto py-12 px-6">
+      
+      <!-- Errore -->
+      <p class="text-red-500 text-center mb-6" *ngIf="error">{{ error }}</p>
+      
+      <!-- Sezione edit -->
+      <div *ngIf="editing; else profileView" class="space-y-8">
+        <form class="space-y-6">
+          
+          <!-- Campi base -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-sm text-gray-600 mb-1">Nome</label>
+              <input [(ngModel)]="editModel.name" name="name" class="input-field w-full">
+            </div>
+            <div>
+              <label class="block text-sm text-gray-600 mb-1">Cognome</label>
+              <input [(ngModel)]="editModel.surname" name="surname" class="input-field w-full">
+            </div>
+          </div>
+          
+          <!-- Email -->
+          <div>
+            <label class="block text-sm text-gray-600 mb-1">Email</label>
+            <input [(ngModel)]="editModel.email" name="email" class="input-field w-full">
+          </div>
+          
+          <!-- Data e Genere -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-sm text-gray-600 mb-1">Data di nascita</label>
+              <input [(ngModel)]="editModel.dob" type="date" name="dob" class="input-field w-full">
+            </div>
+            <div>
+              <label class="block text-sm text-gray-600 mb-1">Genere</label>
+              <select [(ngModel)]="editModel.gender" name="gender" class="input-field w-full">
+                <option value="">Seleziona...</option>
+                <option value="male">Maschile</option>
+                <option value="female">Femminile</option>
+                <option value="other">Altro</option>
+              </select>
+            </div>
+          </div>
+          
+          <!-- Telefono -->
+          <div>
+            <label class="block text-sm text-gray-600 mb-1">Telefono</label>
+            <input [(ngModel)]="editModel.phone" name="phone" class="input-field w-full">
+          </div>
+          
+          <!-- Città -->
+          <div>
+            <label class="block text-sm text-gray-600 mb-1">Città</label>
+            <input [(ngModel)]="editModel.city" name="city" class="input-field w-full">
+          </div>
+          
+          <!-- Bio -->
+          <div>
+            <label class="block text-sm text-gray-600 mb-1">Bio</label>
+            <textarea [(ngModel)]="editModel.bio" name="bio" class="input-field w-full h-24"></textarea>
+          </div>
+          
+          <!-- Azioni -->
+          <div class="flex justify-center gap-4 mt-8">
+            <button type="button" (click)="saveProfile()" 
+                    class="flex items-center gap-2 bg-[#5EADB1] text-white font-semibold py-2 px-6 rounded-lg hover:bg-[#60BFB6] transition">
+              💾 Salva
+            </button>
+            <button type="button" (click)="cancelEdit()" 
+                    class="flex items-center gap-2 bg-gray-200 text-gray-800 font-semibold py-2 px-6 rounded-lg hover:bg-gray-300 transition">
+              ✖ Annulla
+            </button>
+          </div>
+        </form>
+      </div>
+  
+      <!-- Sezione view -->
+      <ng-template #profileView>
+        <div class="space-y-8">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-gray-800">
+            <p><span class="block text-sm text-gray-500">Nome</span> {{ user?.name }} {{ user?.surname }}</p>
+            <p><span class="block text-sm text-gray-500">Email</span> {{ user?.email }}</p>
+            <p><span class="block text-sm text-gray-500">Data di nascita</span> {{ user?.dob || 'Non specificata' }}</p>
+            <p><span class="block text-sm text-gray-500">Genere</span> {{ user?.gender || 'Non specificato' }}</p>
+            <p><span class="block text-sm text-gray-500">Telefono</span> {{ user?.phone || 'Non specificato' }}</p>
+            <p><span class="block text-sm text-gray-500">Città</span> {{ user?.city || 'Non specificata' }}</p>
+          </div>
+          
+          <div>
+            <span class="block text-sm text-gray-500">Bio</span>
+            <p class="italic text-gray-700">{{ user?.bio || 'Nessuna bio disponibile' }}</p>
+          </div>
+          
+          <!-- Bottoni -->
+          <div class="flex justify-center gap-4 mt-8">
+            <button (click)="enableEdit()" 
+                    class="flex items-center gap-2 bg-[#5EADB1] text-white font-semibold py-2 px-6 rounded-lg hover:bg-[#60BFB6] transition">
+              Modifica Profilo
+            </button>
+            <button (click)="logout()" 
+                    class="flex items-center gap-2 bg-gray-200 text-gray-800 font-semibold py-2 px-6 rounded-lg hover:bg-gray-300 transition">
+              Logout
+            </button>
+          </div>
+        </div>
+      </ng-template>
+    </main>
+  </div>
+  
