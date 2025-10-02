@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { SpecialistCardComponent } from './specialist-card.component';
+import { HttpClientModule } from '@angular/common/http';
 
 interface Specialist {
   id: string;
@@ -15,7 +16,7 @@ interface Specialist {
 @Component({
   selector: 'app-specialist-detail',
   standalone: true,
-  imports: [CommonModule, SpecialistCardComponent], 
+  imports: [CommonModule, SpecialistCardComponent, HttpClientModule], 
   templateUrl: './specialist-detail.component.html',
   styleUrls: ['./specialist-detail.component.css']
 })

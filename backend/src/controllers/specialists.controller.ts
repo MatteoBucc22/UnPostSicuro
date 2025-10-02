@@ -30,3 +30,15 @@ export const deleteSpecialist = async (req: Request, res: Response) => {
   if (error) return res.status(400).json({ error });
   res.json(data);
 };
+
+export const getSpecialistsbyId = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { data, error } = await supabase
+    .from('specialists')
+    .select('*')
+    .eq('id', id)   // filtra per id
+    .single();      // restituisce un solo record
+
+  if (error) return res.status(404).json({ error: error.message });
+  res.json(data);
+};

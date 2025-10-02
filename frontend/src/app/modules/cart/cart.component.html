@@ -1,0 +1,48 @@
+<div class="max-w-6xl mx-auto p-6">
+    <h1 class="text-3xl font-bold text-[#5EADB1] mb-8">Il tuo carrello</h1>
+  
+    <!-- Caso carrello vuoto -->
+    <div *ngIf="isEmpty" class="text-center bg-white rounded-2xl shadow-md p-10">
+      <h2 class="text-2xl font-semibold text-gray-700 mb-4">Il carrello è vuoto</h2>
+      <p class="text-gray-500 mb-6">Aggiungi ebook o specialisti per iniziare.</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a routerLink="/ebooks" 
+           class="px-6 py-3 bg-[#5EADB1] text-white font-semibold rounded-xl hover:bg-[#4c9397] transition">
+          📚 Esplora i nostri Ebook
+        </a>
+        <a routerLink="/specialists" 
+           class="px-6 py-3 bg-[#5EADB1] text-white font-semibold rounded-xl hover:bg-[#4c9397] transition">
+          👩‍⚕️ Esplora i nostri Specialisti
+        </a>
+      </div>
+    </div>
+  
+    <!-- Lista articoli -->
+    <div *ngFor="let item of cartItems" class="flex flex-col md:flex-row justify-between items-center bg-white rounded-2xl shadow-lg p-6 mb-6">
+      <!-- Info ebook -->
+      <div class="flex items-center gap-6">
+        <img [src]="item.ebooks?.image_url" 
+             class="w-24 h-32 object-cover rounded-xl shadow-sm border border-gray-200" />
+        <div>
+          <h2 class="text-xl font-semibold text-gray-800">{{ item.ebooks?.title }}</h2>
+          <p class="text-gray-500">Autore: {{ item.ebooks?.author }}</p>
+        </div>
+      </div>
+  
+      <!-- Select specialist -->
+      <div class="mt-6 md:mt-0 flex items-center gap-3">
+        <select [(ngModel)]="item.selectedSpecialist" 
+                (change)="selectSpecialist(item.id, item.selectedSpecialist)"
+                class="px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-[#5EADB1] focus:outline-none">
+          <option *ngFor="let s of specialists" [value]="s.id">
+            {{ s.name }} ({{ s.specialty }})
+          </option>
+        </select>
+        <button (click)="removeItem(item.id)" 
+                class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition">
+          🗑️ Rimuovi
+        </button>
+      </div>
+    </div>
+  </div>
+  

@@ -26,11 +26,23 @@ export const routes: Routes = [
   { path: 'ebooks/:id', loadComponent: () =>
     import('./modules/ebook-card/ebook-detail.component').then(m => m.EbookDetailComponent)
   },
-
+  { path: 'specialists/:id', loadComponent: () =>
+    import('./modules/specialist-card/specialist-detail.component').then(m => m.SpecialistDetailComponent)
+  },
   {
     path: 'registration-page',
     loadComponent: () =>
       import('./modules/auth/register/registration-page.component').then(m => m.RegistrationPageComponent),
+  },
+  {
+    path: 'profile',
+    loadComponent: () =>
+      import('./modules/profile/profile.component').then(m => m.ProfileComponent),
+  },
+  {
+    path: 'cart',
+    loadComponent: () =>
+      import('./modules/cart/cart.component').then(m => m.CartComponent),
   },
 
   { path: '**', redirectTo: '' }
