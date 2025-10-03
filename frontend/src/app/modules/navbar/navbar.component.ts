@@ -19,7 +19,7 @@ interface CartItem {
 })
 export class NavbarComponent implements OnInit {
   user: AppUser | null = null;
-  cartItems: CartItem[] = [];
+  realCartItems: CartItem[] = [];
   isMenuOpen = false;
 
   constructor(
@@ -33,7 +33,7 @@ export class NavbarComponent implements OnInit {
       if (this.user?.id) {
         this.loadCart();
       } else {
-        this.cartItems = [];
+        this.realCartItems = [];
       }
     });
   }
@@ -44,7 +44,7 @@ export class NavbarComponent implements OnInit {
     this.cartService.getCart(this.user.id).subscribe({
       next: (items: CartItem[]) => {
         // Filtra le righe senza ebook o specialist
-        this.cartItems = items.filter(item => item.ebook_id || item.specialist_id);
+        this.realCartItems = items.filter(item => item.ebook_id || item.specialist_id);
       },
       error: (err: unknown) => console.error('Errore caricamento carrello:', err)
     });
@@ -54,7 +54,7 @@ export class NavbarComponent implements OnInit {
   logout(): void {
     this.authService.logout();
     this.user = null;
-    this.cartItems = [];
+    this.realCartItems = [];
   }
 
   isLoggedIn(): boolean {
