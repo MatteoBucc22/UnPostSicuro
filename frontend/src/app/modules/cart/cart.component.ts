@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { CartService } from './cart.component.service';
 import { AuthService, AppUser } from '../auth/auth.services';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 
 interface Specialist {
   id: string;
@@ -28,24 +28,21 @@ export class CartComponent implements OnInit {
 
   constructor(
     private cartService: CartService,
-    private auth: AuthService,
-    private http: HttpClient
+    private auth: AuthService
   ) {}
 
   ngOnInit(): void {
-    // Carica specialisti dal backend
-    this.http.get<Specialist[]>('http://localhost:3000/specialists')
-      .subscribe({
-        next: data => this.specialists = data,
-        error: err => console.error('Errore caricamento specialisti:', err)
-      });
+    // Carica specialisti
+    this.cartService.getSpecialists().subscribe({
+      next: data => this.specialists = data,
+      error: err => console.error('Errore caricamento specialisti:', err)
+    });
 
-    // Subscribe ai cambiamenti dell'utente
+    // Subscribe utente
     this.auth.currentAppUser.subscribe(user => {
       this.user = user;
-      if (user?.id) {
-        this.loadCart(user.id);
-      } else {
+      if (user?.id) this.loadCart(user.id);
+      else {
         this.cartItems = [];
         this.isLoading = false;
       }
@@ -79,10 +76,11 @@ export class CartComponent implements OnInit {
       .subscribe(() => this.loadCart(this.user!.id));
   }
 
-  get isEmpty(): boolean {
-    if (!this.cartItems || this.cartItems.length === 0) return true;
-    // Se tutti gli item hanno ebook_id e specialist_id null → consideralo vuoto
-    return this.cartItems.every(item => !item.ebook_id && !item.specialist_id);
+  get realCartItems(): any[] {
+    return this.cartItems.filter(item => item.ebook_id || item.specialist_id);
   }
-  
+
+  get isEmpty(): boolean {
+    return this.realCartItems.length === 0;
+  }
 }

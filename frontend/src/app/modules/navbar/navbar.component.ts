@@ -4,6 +4,13 @@ import { CommonModule } from '@angular/common';
 import { AuthService, AppUser } from '../auth/auth.services';
 import { CartService } from '../cart/cart.component.service';
 
+interface CartItem {
+  id: string;
+  ebook_id?: string | null;
+  specialist_id?: string | null;
+  quantity?: number;
+}
+
 @Component({
   selector: 'app-navbar',
   standalone: true,
@@ -11,25 +18,40 @@ import { CartService } from '../cart/cart.component.service';
   templateUrl: './navbar.component.html',
 })
 export class NavbarComponent implements OnInit {
-  user: AppUser | null | undefined;
-  cartItems: any[] = [];
+  user: AppUser | null = null;
+  cartItems: CartItem[] = [];
   isMenuOpen = false;
 
-  constructor(private authService: AuthService, private cartService: CartService) {}
+  constructor(
+    private authService: AuthService,
+    private cartService: CartService
+  ) {}
 
   ngOnInit(): void {
-    this.authService.currentAppUser.subscribe(user => {
+    this.authService.currentAppUser.subscribe((user: AppUser | null | undefined) => {
       this.user = user ?? null;
-      if (this.user?.id) this.loadCart();
+      if (this.user?.id) {
+        this.loadCart();
+      } else {
+        this.cartItems = [];
+      }
     });
   }
 
-  loadCart() {
+  loadCart(): void {
     if (!this.user) return;
-    this.cartService.getCart(this.user.id).subscribe(items => this.cartItems = items);
+  
+    this.cartService.getCart(this.user.id).subscribe({
+      next: (items: CartItem[]) => {
+        // Filtra le righe senza ebook o specialist
+        this.cartItems = items.filter(item => item.ebook_id || item.specialist_id);
+      },
+      error: (err: unknown) => console.error('Errore caricamento carrello:', err)
+    });
   }
+  
 
-  logout() {
+  logout(): void {
     this.authService.logout();
     this.user = null;
     this.cartItems = [];
@@ -39,6 +61,11 @@ export class NavbarComponent implements OnInit {
     return !!this.user;
   }
 
-  toggleMenu() { this.isMenuOpen = !this.isMenuOpen; }
-  closeMenu() { this.isMenuOpen = false; }
+  toggleMenu(): void {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
+
+  closeMenu(): void {
+    this.isMenuOpen = false;
+  }
 }

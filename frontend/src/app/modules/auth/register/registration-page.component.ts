@@ -13,6 +13,8 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 })
 export class RegistrationPageComponent implements OnInit {
   form: FormGroup;
+  isSubmitting = false;
+  errorMessage = '';
 
   constructor(
     private fb: FormBuilder,
@@ -33,34 +35,43 @@ export class RegistrationPageComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
       if (params['email'] && params['id']) {
         this.form.patchValue({
           email: params['email'],
           providerId: params['id']
         });
-        this.form.get('email')?.disable(); // blocca modifica
+        this.form.get('email')?.disable();  // blocca modifica email
         this.form.get('password')?.clearValidators(); // password opzionale
         this.form.get('password')?.updateValueAndValidity();
       }
     });
   }
-  
-  onRegister() {
+
+  onRegister(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
-  
-    this.http.post('http://localhost:3000/register', this.form.value).subscribe({
-      next: () => this.router.navigate(['/']),
-      error: err => console.error('Errore registrazione:', err)
+
+    this.isSubmitting = true;
+    this.errorMessage = '';
+
+    this.http.post('/api/register', this.form.getRawValue()).subscribe({
+      next: () => {
+        this.isSubmitting = false;
+        this.router.navigate(['/']);
+      },
+      error: err => {
+        console.error('Errore registrazione:', err);
+        this.errorMessage = err?.error?.message || 'Errore durante la registrazione';
+        this.isSubmitting = false;
+      }
     });
   }
-  
 
-  get f(): { [key: string]: any } {
+  get f() {
     return this.form.controls;
   }
 }

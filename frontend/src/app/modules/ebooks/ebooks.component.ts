@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { EbookCardComponent } from '../ebook-card/ebook-card.component';
 import { RouterLink } from '@angular/router';
+import { EbooksService } from './ebooks.component.service';
 
 interface Ebook {
   id: string;
@@ -17,24 +18,19 @@ interface Ebook {
 @Component({
   selector: 'app-ebooks',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, EbookCardComponent, RouterLink], 
+  imports: [CommonModule, HttpClientModule, EbookCardComponent, RouterLink],
   templateUrl: './ebooks.component.html',
   styleUrls: ['./ebooks.component.css']
 })
 export class EbooksComponent implements OnInit {
   ebooks: Ebook[] = [];
 
-  constructor(private http: HttpClient) {}
+  constructor(private ebooksService: EbooksService) {}
 
   ngOnInit(): void {
-    this.fetchEbooks().subscribe({
+    this.ebooksService.fetchEbooks().subscribe({
       next: (data) => this.ebooks = data,
       error: (err) => console.error('Errore caricamento ebook:', err)
     });
-  }
-
-  fetchEbooks(): Observable<Ebook[]> {
-    // Assicurati che il backend abbia una route GET /ebooks che ritorna tutti gli ebook
-    return this.http.get<Ebook[]>('http://localhost:3000/ebooks');
   }
 }
