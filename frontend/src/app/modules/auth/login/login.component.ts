@@ -15,8 +15,13 @@ import { AuthService } from '../auth.services';
 export class LoginComponent {
   form: FormGroup;
   errorMessage = '';
+  isSubmitting = false;
 
-  constructor(private fb: FormBuilder, private auth: AuthService, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private auth: AuthService,
+    private router: Router
+  ) {
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required]
@@ -24,22 +29,35 @@ export class LoginComponent {
   }
 
   async onLogin(): Promise<void> {
+    if (this.form.invalid) {
+      this.errorMessage = 'Compila correttamente tutti i campi';
+      return;
+    }
+
+    this.isSubmitting = true;
+    this.errorMessage = '';
+
     const { email, password } = this.form.value;
+
     try {
       const res = await this.auth.login(email, password);
-      if (res.user) {
+
+      if (res?.user) {
         console.log('Login ok:', res);
-        // Redirect automatico a /home
         this.router.navigate(['/home']);
+      } else {
+        this.errorMessage = 'Credenziali non valide';
       }
-    } catch (err: any) {
-      console.error('Errore login:', err.message || err);
-      this.errorMessage = err.message || 'Errore durante il login';
+    } catch (err: unknown) {
+      console.error('Errore login:', err);
+      this.errorMessage = err instanceof Error ? err.message : 'Errore durante il login';
+    } finally {
+      this.isSubmitting = false;
     }
   }
 
   loginWithGoogle(): void {
-    this.auth.loginWithGoogle(); 
-    // La callback di Supabase gestirà il redirect
+    this.auth.loginWithGoogle();
+    // Supabase gestisce il redirect con la callback
   }
 }

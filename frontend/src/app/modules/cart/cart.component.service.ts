@@ -6,20 +6,23 @@ import { Observable } from 'rxjs';
 export class CartService {
   constructor(private http: HttpClient) {}
 
-  getCart(userId: string): Observable<any> {
-    return this.http.get(`http://localhost:3000/users/${userId}/cart`);
+  getCart(userId: string): Observable<any[]> {
+    return this.http.get<any[]>(`/api/users/${userId}/cart`);
   }
-  
-  addToCart(userId: string, ebookId: string, quantity: number = 1): Observable<any> {
-    return this.http.post(`http://localhost:3000/users/${userId}/cart/add`, { ebookId, quantity });
+
+  addToCart(userId: string, ebookId: string): Observable<any> {
+    return this.http.post(`/api/users/${userId}/cart/add`, { ebookId });
   }
-  
-  updateSpecialist(userId: string, itemId: string, specialistId: string): Observable<any> {
-    return this.http.patch(`http://localhost:3000/users/${userId}/cart/item/${itemId}/specialist`, { selectedSpecialist: specialistId });
-  }
-  
+
   removeItem(userId: string, itemId: string): Observable<any> {
-    return this.http.delete(`http://localhost:3000/users/${userId}/cart/remove/${itemId}`);
+    return this.http.delete(`/api/users/${userId}/cart/remove/${itemId}`);
   }
-  
+
+  updateSpecialist(userId: string, itemId: string, specialistId: string): Observable<any> {
+    return this.http.patch(`/api/users/${userId}/cart/item/${itemId}/specialist`, { specialistId });
+  }
+
+  getSpecialists(): Observable<any[]> {
+    return this.http.get<any[]>('/api/specialists');
+  }
 }

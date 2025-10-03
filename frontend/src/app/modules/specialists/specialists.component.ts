@@ -1,18 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClientModule } from '@angular/common/http';
 import { SpecialistCardComponent } from '../specialist-card/specialist-card.component';
-// import { AuthService } from '../auth/auth.services'; // importa il servizio auth
-import { User } from '@supabase/supabase-js';
-
-interface Specialist {
-  id: string;
-  name: string;
-  specialty: string;
-  bio: string;
-  image_url?: string;
-}
+import { SpecialistService, Specialist } from '../specialist-card/specialist-detail.component.service';
 
 @Component({
   selector: 'app-specialists',
@@ -23,25 +13,17 @@ interface Specialist {
 })
 export class SpecialistsComponent implements OnInit {
   specialists: Specialist[] = [];
-  currentUser: User | null | undefined 
 
-  constructor(private http: HttpClient, /*private authService: AuthService*/) {}
+  constructor(private specialistService: SpecialistService) {}
 
   ngOnInit(): void {
-    // Sottoscrizione al BehaviorSubject di AuthService
-    // this.authService.currentUser.subscribe(user => {
-    //   this.currentUser = user;
-    //   console.log('Utente loggato:', user);
-    // });
-
-    // Carica gli specialisti dal backend
-    this.fetchSpecialists().subscribe({
-      next: (data) => this.specialists = data,
-      error: (err) => console.error('Errore caricamento specialisti:', err)
-    });
+    this.loadSpecialists();
   }
 
-  fetchSpecialists(): Observable<Specialist[]> {
-    return this.http.get<Specialist[]>('http://localhost:3000/specialists');
+  loadSpecialists(): void {
+    this.specialistService.getAllSpecialists().subscribe({
+      next: data => this.specialists = data,
+      error: err => console.error('Errore caricamento specialisti:', err)
+    });
   }
 }
