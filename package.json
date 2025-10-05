@@ -6,8 +6,15 @@
     "tailwindcss": "^4.1.13"
   },
   "dependencies": {
+    "@angular/animations": "^20.3.3",
+    "@angular/cli": "^20.3.4",
+    "@angular/compiler": "^20.3.3",
+    "@angular/core": "^20.3.3",
+    "@primeuix/themes": "^1.2.5",
     "@supabase/supabase-js": "^2.58.0",
     "multer": "^2.0.2",
+    "primeicons": "^7.0.0",
+    "primeng": "^20.2.0",
     "uuid": "^13.0.0"
   }
 }
