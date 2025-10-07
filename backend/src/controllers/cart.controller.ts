@@ -31,7 +31,7 @@ export const addItem = async (req: Request, res: Response) => {
   }
 
   if (existing) {
-    return res.json(existing); // già presente
+    return res.json(existing); 
   } else {
     const { v4: uuidv4 } = await import('uuid');
     const { data, error } = await supabase

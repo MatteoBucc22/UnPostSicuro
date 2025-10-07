@@ -3,6 +3,7 @@ import { supabase } from '../database/supabaseClient';
 
 export const getEbooks = async (req: Request, res: Response) => {
   const { data, error } = await supabase.from('ebooks').select('*');
+  console.log(data)
   if (error) return res.status(500).json({ error: error.message });
   res.json(data);
 };

@@ -1,14 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { Specialist } from './specialist-detail.component.service';
 
-interface Specialist {
-  id: string;
-  name: string;
-  specialty: string;
-  bio: string;
-  image_url?: string;
-}
 
 @Component({
   selector: 'app-specialist-card',

@@ -4,6 +4,7 @@ exports.getEbookById = exports.addEbook = exports.getEbooks = void 0;
 const supabaseClient_1 = require("../database/supabaseClient");
 const getEbooks = async (req, res) => {
     const { data, error } = await supabaseClient_1.supabase.from('ebooks').select('*');
+    console.log(data);
     if (error)
         return res.status(500).json({ error: error.message });
     res.json(data);

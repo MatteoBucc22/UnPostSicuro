@@ -6,6 +6,13 @@ export default defineConfig({
   plugins: [angular()],
   server: {
     port: 4200,
-    historyApiFallback: true // <- fa sì che tutte le rotte puntino a index.html
+    historyApiFallback: true,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000', // backend
+        changeOrigin: true,
+        rewrite: path => path.replace(/^\/api/, '') // rimuove il prefisso /api
+      }
+    }
   }
 });
