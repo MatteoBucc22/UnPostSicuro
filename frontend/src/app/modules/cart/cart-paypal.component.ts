@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { AppointmentService } from '../appointment/appointment.component.service'
 
 declare global {
   interface Window { paypal: any; }
@@ -12,9 +13,13 @@ declare global {
 })
 export class CartPaypalComponent implements OnInit {
   @Input() amount!: number;
-  @Input() userId!: string;  // ora obbligatorio
+  @Input() userId!: string;
+  @Input() appointmentId?: string; // 👈 aggiunto: serve per collegare il pagamento all’appuntamento “blocked”
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private appointmentService: AppointmentService // 👈 inietta il service
+  ) {}
 
   async ngOnInit() {
     if (!this.userId) {
@@ -46,7 +51,6 @@ export class CartPaypalComponent implements OnInit {
     window.paypal.Buttons({
       style: { layout: 'horizontal', color: 'gold', shape: 'rect', label: 'pay' },
 
-      // crea ordine lato server
       createOrder: (_data: any, _actions: any) => {
         return this.http.post('/payments/create-order', {
           amount: this.amount,
@@ -54,22 +58,36 @@ export class CartPaypalComponent implements OnInit {
         }).toPromise().then((res: any) => res.id);
       },
 
-      // approva pagamento lato server
-      onApprove: (_data: any, _actions: any) => {
-        return this.http.post('/payments/capture-order', {
-          orderID: _data.orderID,
-          userId: this.userId
-        }).toPromise().then(orderData => {
+      onApprove: async (_data: any, _actions: any) => {
+        try {
+          const orderData = await this.http.post('/payments/capture-order', {
+            orderID: _data.orderID,
+            userId: this.userId
+          }).toPromise();
+
           console.log('Pagamento completato:', orderData);
-          alert('Pagamento completato con successo!');
-          // chiudi popup PayPal automaticamente
+          alert('✅ Pagamento completato con successo!');
+
+          // 👇 Conferma l'appuntamento "blocked" → "booked"
+          if (this.appointmentId) {
+            this.appointmentService.confirmAppointment(this.appointmentId).subscribe({
+              next: () => {
+                alert('📅 Appuntamento confermato!');
+              },
+              error: (err) => {
+                console.error('Errore durante conferma:', err);
+                alert('Pagamento completato, ma errore nella conferma appuntamento.');
+              }
+            });
+          }
+
           if (_actions && typeof _actions.close === 'function') {
             _actions.close();
           }
-        }).catch(err => {
+        } catch (err) {
           console.error('Errore durante la cattura:', err);
           alert('Errore nel pagamento PayPal.');
-        });
+        }
       },
 
       onError: (err: any) => {

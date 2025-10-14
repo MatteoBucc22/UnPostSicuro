@@ -13,3 +13,13 @@ html {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+full-calendar {
+  max-width: 900px;
+  margin: 20px auto;
+  display: block;
+}
+
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
