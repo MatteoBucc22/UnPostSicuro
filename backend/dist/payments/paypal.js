@@ -67,17 +67,27 @@ const captureOrder = async (req, res) => {
         const accessToken = await getAccessToken();
         const response = await fetch(`${PAYPAL_API}/v2/checkout/orders/${orderID}/capture`, {
             method: 'POST',
-            headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Content-Type': 'application/json'
+            },
         });
         const data = await response.json();
         if (data.status === 'COMPLETED') {
-            await supabaseClient_1.supabase.from('payments')
+            await supabaseClient_1.supabase
+                .from('payments')
                 .update({ status: 'COMPLETED', completed_at: new Date().toISOString() })
                 .eq('order_id', orderID);
+            await supabaseClient_1.supabase
+                .from('appointments')
+                .update({ status: 'booked' })
+                .eq('user_id', userId)
+                .eq('status', 'pending');
             await supabaseClient_1.supabase.from('cart_item').delete().eq('user_id', userId);
         }
         else {
-            await supabaseClient_1.supabase.from('payments')
+            await supabaseClient_1.supabase
+                .from('payments')
                 .update({ status: 'FAILED' })
                 .eq('order_id', orderID);
         }
