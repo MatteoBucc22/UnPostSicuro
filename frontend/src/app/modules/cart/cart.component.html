@@ -78,8 +78,18 @@
           ✅ Specialista selezionato correttamente!
         </p>
       </div>
+      <app-calendar
+        *ngIf="item.selectedSpecialist && user"
+        [specialistId]="item.selectedSpecialist"
+        [userId]="user.id"
+        #calendarComp>
+      </app-calendar>
+    
+
     </div>
   </div>
+
+
 
   <!-- SIDEBAR -->
   <aside class="bg-white/90 backdrop-blur-md shadow-xl rounded-2xl p-6 h-fit sticky top-6 border border-gray-100">
@@ -104,12 +114,12 @@
             class="w-full py-3 text-lg bg-[#5EADB1] text-white font-semibold rounded-xl hover:bg-[#4c9397] shadow-md transition-all">
       Procedi al pagamento →
     </button>
-    <app-cart-paypal 
-      *ngIf="user?.id" 
-      [amount]="subtotal" 
-      [userId]="user!.id">
+    <app-cart-paypal
+      *ngIf="user?.id"
+      [amount]="subtotal"
+      [userId]="user!.id"
+      [appointmentId]="appointmentId">
     </app-cart-paypal>
-  
 
 
     <p class="text-sm text-gray-500 text-center mt-4">

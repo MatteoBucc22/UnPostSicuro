@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -8,17 +8,24 @@ import { HttpClientModule } from '@angular/common/http';
 import { SpecialistCardComponent } from '../specialist-card/specialist-card.component';
 import { Specialist } from '../specialist-card/specialist-detail.component.service';
 import { CartPaypalComponent } from './cart-paypal.component';
+import { CalendarComponent } from '../appointment/appointment.component';
 
 
 
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, HttpClientModule, CurrencyPipe, SpecialistCardComponent, CartPaypalComponent],
+  imports: [CommonModule, FormsModule, RouterLink, HttpClientModule, CurrencyPipe, SpecialistCardComponent, CartPaypalComponent, CalendarComponent],
   templateUrl: './cart.component.html',
 })
 
 export class CartComponent implements OnInit {
+  @ViewChild('calendarComp') calendarComp?: CalendarComponent;
+
+  get appointmentId(): string | undefined {
+    return this.calendarComp?.pendingAppointmentId;
+  }
+
   cartItems: any[] = [];
   specialists: Specialist[] = [];
   user?: AppUser | null;
@@ -114,9 +121,6 @@ export class CartComponent implements OnInit {
   }
   
 
-
-  
-  
   checkout() {
     alert('Checkout in arrivo 🛒');
   }

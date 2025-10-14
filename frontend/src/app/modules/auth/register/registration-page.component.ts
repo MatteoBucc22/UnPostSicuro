@@ -58,7 +58,7 @@ export class RegistrationPageComponent implements OnInit {
     this.isSubmitting = true;
     this.errorMessage = '';
 
-    this.http.post('/api/register', this.form.getRawValue()).subscribe({
+    this.http.post('/api/auth/register', this.form.getRawValue()).subscribe({
       next: () => {
         this.isSubmitting = false;
         this.router.navigate(['/']);

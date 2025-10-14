@@ -4,7 +4,6 @@ import { NavbarComponent } from './modules/navbar/navbar.component';
 import { AuthService } from './modules/auth/auth.services'; // <-- 1. IMPORTA IL SERVIZIO
 import { CommonModule } from '@angular/common'; // <-- 2. IMPORTA CommonModule PER *ngIf e | async
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-
 @Component({
   selector: 'app-root',
   standalone: true,
