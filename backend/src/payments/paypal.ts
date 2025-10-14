@@ -73,26 +73,36 @@ export const createOrder = async (req: Request, res: Response) => {
 export const captureOrder = async (req: Request, res: Response) => {
   try {
     const { orderID, userId } = req.body;
-    if (!orderID || !userId) return res.status(400).json({ error: 'orderID o userId mancante' });
+    if (!orderID || !userId)
+      return res.status(400).json({ error: 'orderID o userId mancante' });
 
     const accessToken = await getAccessToken();
     const response = await fetch(`${PAYPAL_API}/v2/checkout/orders/${orderID}/capture`, {
       method: 'POST',
-      headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json'
+      },
     });
 
     const data = await response.json();
 
-    // Aggiorna lo stato del pagamento
     if (data.status === 'COMPLETED') {
-      await supabase.from('payments')
+      await supabase
+        .from('payments')
         .update({ status: 'COMPLETED', completed_at: new Date().toISOString() })
         .eq('order_id', orderID);
 
-      // svuota carrello
+      await supabase
+        .from('appointments')
+        .update({ status: 'booked' })
+        .eq('user_id', userId)
+        .eq('status', 'pending');
+
       await supabase.from('cart_item').delete().eq('user_id', userId);
     } else {
-      await supabase.from('payments')
+      await supabase
+        .from('payments')
         .update({ status: 'FAILED' })
         .eq('order_id', orderID);
     }
@@ -103,6 +113,7 @@ export const captureOrder = async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Errore cattura pagamento PayPal' });
   }
 };
+
 
 
 export const getPaypalConfig = (req: Request, res: Response) => {
