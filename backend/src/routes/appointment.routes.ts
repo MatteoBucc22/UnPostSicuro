@@ -4,7 +4,9 @@ import {
   createPendingAppointment,
   confirmAppointment,
   cancelAppointment, 
-  getPendingAppointment
+  getPendingAppointment,
+  getAppointmentsByUser, 
+  updateAppointment
 } from '../controllers/appointment.controller';
 
 const router = Router();
@@ -23,4 +25,7 @@ router.patch('/:appointmentId/cancel', cancelAppointment);
 
 router.get('/pending/:userId', getPendingAppointment);
 
+router.get('/user/:userId', getAppointmentsByUser)
+
+router.put('/:appointmentId/update', updateAppointment);
 export default router;

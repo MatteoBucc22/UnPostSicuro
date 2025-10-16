@@ -5,7 +5,8 @@ import { Observable } from 'rxjs';
 export interface Specialist {
   id: string;
   name: string;
-  specialty: string;
+  surname: string;
+  expertise: string;
   bio: string;
   image_url?: string;
 }

@@ -39,6 +39,12 @@ export const routes: Routes = [
     canActivate: [AuthGuard]   // solo utenti loggati
   },
   {
+    path: 'my-appointments',
+    loadComponent: () =>
+      import('./modules/my-appointments/my-appointments.component').then(m => m.MyAppointmentsComponent),
+    canActivate: [AuthGuard]   // solo utenti loggati
+  },
+  {
     path: 'cart',
     loadComponent: () =>
       import('./modules/cart/cart.component').then(m => m.CartComponent),

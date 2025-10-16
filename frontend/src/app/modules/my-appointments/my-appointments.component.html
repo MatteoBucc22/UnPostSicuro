@@ -1,0 +1,136 @@
+<div class="min-h-screen bg-gradient-to-b from-[#FAFAFA] via-white to-[#FAFAFA] py-20 px-6">
+  <div class="max-w-5xl mx-auto">
+    <h1 class="text-3xl font-bold text-center text-[#2B3A67] mb-12">
+      Le mie Prenotazioni
+    </h1>
+
+    <!-- Filtri -->
+    <div class="flex flex-col sm:flex-row gap-4 mb-6 justify-between items-center">
+      <!-- Filtro per stato -->
+      <select [(ngModel)]="filterStatus" (change)="applyFilters()" class="border rounded-full px-4 py-2">
+        <option value="all">Tutti</option>
+        <option value="booked">Confermato</option>
+        <option value="completed">Completato</option>
+        <option value="blocked">In attesa</option>
+        <option value="canceled">Annullato</option>
+      </select>
+
+      <!-- Filtro per data -->
+      <input
+        type="date"
+        [(ngModel)]="filterDate"
+        (change)="applyFilters()"
+        class="border rounded-full px-4 py-2"
+      />
+    </div>
+
+    <!-- Lista appuntamenti -->
+    <div
+      *ngFor="let app of filteredAppointments"
+      class="bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 p-6 mb-8"
+    >
+
+      <!-- Vista normale (non in modifica) -->
+      <div *ngIf="!app.editing" class="grid grid-cols-1 sm:grid-cols-3 items-center">
+        
+        <!-- Info specialista -->
+        <div class="text-left">
+          <h2 class="text-xl font-semibold text-[#2B3A67]">
+            {{ getSpecialistName(app) }}
+          </h2>          
+          <p class="text-gray-600 text-sm">
+            {{ app.start_time | date: 'dd/MM/yyyy' }} • {{ app.start_time | date: 'HH:mm' }}
+          </p>
+        </div>
+
+        <!-- Stato centrato -->
+        <div class="flex justify-center my-4 sm:my-0">
+          <div
+            class="min-w-[120px] text-center px-4 py-1 rounded-full text-sm font-semibold"
+            [ngClass]="{
+              'bg-green-500 text-white': app.status === 'booked' || app.status === 'completed',
+              'bg-yellow-500 text-white': app.status === 'blocked',
+              'bg-red-500 text-white': app.status === 'canceled'
+            }"
+          >
+            {{ translateStatus(app.status) }}
+          </div>
+        </div>
+
+        <!-- Pulsanti azione -->
+        <div class="flex justify-center sm:justify-end gap-3">
+          <!-- Modifica: solo se confermato -->
+          <button
+            *ngIf="app.status === 'booked'"
+            (click)="app.editing = true"
+            class="px-5 py-2 rounded-full bg-[#5EADB1] text-white font-semibold hover:brightness-110 transition-all"
+          >
+            Modifica
+          </button>
+
+          <!-- Annulla: non visibile se già cancellato -->
+          <button
+            *ngIf="app.status !== 'canceled'"
+            (click)="cancelAppointment(app.id)"
+            class="px-5 py-2 rounded-full border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 transition-all"
+          >
+            Annulla
+          </button>
+        </div>
+      </div>
+
+      <!-- Vista modifica -->
+      <div *ngIf="app.editing" class="border-t border-gray-100 pt-6 mt-4">
+        <div class="text-left mb-4">
+          <h2 class="text-xl font-semibold text-[#2B3A67]">
+            {{ getSpecialistName(app) }}
+          </h2>          
+        </div>
+
+        <!-- Data -->
+        <input
+          type="date"
+          [(ngModel)]="app.newDate"
+          (change)="onDateChange(app)"
+          class="w-full border border-gray-300 rounded-full px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#5EADB1]"
+        />
+
+        <!-- Slot disponibili -->
+        <div *ngIf="app.availableSlots?.length" class="grid grid-cols-3 sm:grid-cols-5 gap-2 mt-4">
+          <button
+            *ngFor="let slot of app.availableSlots"
+            (click)="onSlotClick(app, slot)"
+            [class.bg-[#5EADB1]]="app.newTime === slot"
+            [class.text-white]="app.newTime === slot"
+            [class.bg-gray-100]="app.newTime !== slot"
+            [class.text-gray-700]="app.newTime !== slot"
+            class="py-2 rounded-full text-sm font-medium transition-all hover:shadow-md"
+          >
+            {{ slot }}
+          </button>
+        </div>
+
+        <p *ngIf="!app.availableSlots?.length && app.newDate" class="text-sm text-gray-500 mt-2">
+          Nessuno slot disponibile per questa data.
+        </p>
+
+        <!-- Pulsanti -->
+        <div class="flex justify-end gap-3 mt-5">
+          <button
+            (click)="updateAppointment(app)"
+            class="px-6 py-2 rounded-full bg-gradient-to-r from-[#5EADB1] to-[#4F9FA4] text-white font-semibold shadow-md hover:shadow-lg hover:brightness-105 transition-all"
+          >
+            Salva
+          </button>
+          <button
+            (click)="app.editing = false"
+            class="px-6 py-2 rounded-full border border-gray-300 text-gray-700 font-medium bg-transparent hover:bg-gray-100 transition-all"
+          >
+            Annulla
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -116,10 +116,11 @@
     </button>
     <app-cart-paypal
       *ngIf="user?.id"
-      [amount]="subtotal"
+      [amount]="totalWithVAT"
       [userId]="user!.id"
       [appointmentId]="appointmentId">
     </app-cart-paypal>
+
 
 
     <p class="text-sm text-gray-500 text-center mt-4">

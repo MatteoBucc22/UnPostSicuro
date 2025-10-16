@@ -1,27 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Specialist } from '../specialist-card/specialist-detail.component.service';
+import { Ebook } from '../ebook-card/ebook-detail.component.service';
 
-export interface Ebook {
-  id: string;
-  title: string;
-  author: string;
-  description: string;
-  image_url?: string;
-  category?: string;
-}
 
-export interface Specialist {
-  id: string;
-  name: string;
-  specialty: string;
-  bio: string;
-  image_url?: string;
-}
 
 @Injectable({ providedIn: 'root' })
 export class HomeService {
-  private API_BASE = '/api'; // <-- proxy verso backend
+  private API_BASE = '/api'; 
 
   constructor(private http: HttpClient) {}
 

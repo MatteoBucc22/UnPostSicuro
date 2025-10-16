@@ -4,7 +4,9 @@ import { RouterLink } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { EbookCardComponent } from '../ebook-card/ebook-card.component';
 import { SpecialistCardComponent } from '../specialist-card/specialist-card.component';
-import { HomeService, Ebook, Specialist } from './home.component.service';
+import { HomeService } from './home.component.service';
+import { Ebook } from '../ebook-card/ebook-detail.component.service';
+import { Specialist } from '../specialist-card/specialist-detail.component.service';
 
 @Component({
   selector: 'app-home',
