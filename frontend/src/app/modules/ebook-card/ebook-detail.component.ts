@@ -5,11 +5,12 @@ import { EbookCardComponent } from './ebook-card.component';
 import { CartService } from '../cart/cart.component.service';
 import { AuthService, AppUser } from '../auth/auth.services';
 import { EbookService, Ebook } from './ebook-detail.component.service';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-ebook-detail',
   standalone: true,
-  imports: [CommonModule, EbookCardComponent],
+  imports: [CommonModule, EbookCardComponent, RouterModule],
   templateUrl: './ebook-detail.component.html',
   styleUrls: ['./ebook-detail.component.css']
 })
@@ -27,22 +28,25 @@ export class EbookDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // Recupera utente corrente
     this.auth.currentAppUser.subscribe(u => this.user = u);
 
     const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.ebookService.getEbook(id).subscribe({
-        next: (data) => this.ebook = data,
-        error: (err) => console.error('Errore caricamento ebook:', err)
-      });
+    if (!id) return;
 
-      this.ebookService.getAllEbooks().subscribe({
-        next: (data) => {
-          this.recommendedEbooks = data.filter(e => e.id !== id).slice(0, 4);
-        },
-        error: (err) => console.error('Errore caricamento consigliati:', err)
-      });
-    }
+    // Carica dettaglio ebook
+    this.ebookService.getEbook(id).subscribe({
+      next: data => this.ebook = data,
+      error: err => console.error('Errore caricamento ebook:', err)
+    });
+
+    // Carica consigliati
+    this.ebookService.getAllEbooks().subscribe({
+      next: data => {
+        this.recommendedEbooks = data.filter(e => e.id !== id).slice(0, 4);
+      },
+      error: err => console.error('Errore caricamento consigliati:', err)
+    });
   }
 
   addToCart() {

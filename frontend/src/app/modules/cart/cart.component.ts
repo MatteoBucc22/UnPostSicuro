@@ -8,19 +8,19 @@ import { HttpClientModule } from '@angular/common/http';
 import { SpecialistCardComponent } from '../specialist-card/specialist-card.component';
 import { Specialist } from '../specialist-card/specialist-detail.component.service';
 import { CartPaypalComponent } from './cart-paypal.component';
-import { CalendarComponent } from '../appointment/appointment.component';
+import { AppointmentComponent } from '../appointment/appointment.component';
 
 
 
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, HttpClientModule, CurrencyPipe, SpecialistCardComponent, CartPaypalComponent, CalendarComponent],
+  imports: [CommonModule, FormsModule, RouterLink, HttpClientModule, CurrencyPipe, SpecialistCardComponent, CartPaypalComponent, AppointmentComponent],
   templateUrl: './cart.component.html',
 })
 
 export class CartComponent implements OnInit {
-  @ViewChild('calendarComp') calendarComp?: CalendarComponent;
+  @ViewChild('calendarComp') calendarComp?: AppointmentComponent;
 
   get appointmentId(): string | undefined {
     return this.calendarComp?.pendingAppointmentId;
@@ -39,6 +39,11 @@ export class CartComponent implements OnInit {
   get subtotal(): number {
     return this.realCartItems.reduce((acc, item) => acc + (item.ebooks?.price || 0), 0);
   }
+
+  get totalWithVAT(): number {
+    return this.subtotal * 1.22; // aggiunge 22% IVA
+  }
+  
 
   ngOnInit(): void {
     // Carica specialisti

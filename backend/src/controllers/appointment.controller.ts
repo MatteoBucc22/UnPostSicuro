@@ -134,3 +134,79 @@ export const getPendingAppointment = async (req: Request, res: Response) => {
     res.status(500).json({ message: 'Errore recupero appuntamento pendente' });
   }
 };
+
+export const getAppointmentsByUser = async (req: Request, res: Response) => {
+  const { userId } = req.params;
+  try {
+    const { data, error } = await supabase
+      .from('appointments')
+      .select(`
+        *,
+        specialists!inner(id, name, surname)
+      `)
+      .eq('user_id', userId)
+      .order('start_time', { ascending: true });
+
+    if (error) throw error;
+
+    console.log('Raw appointments from Supabase:', JSON.stringify(data, null, 2));
+
+    res.json(data);
+  } catch (err: any) {
+    console.error(err);
+    res.status(500).json({ message: 'Errore caricamento appuntamenti' });
+  }
+};
+
+
+
+export const updateAppointment = async (req: Request, res: Response) => {
+  const { appointmentId } = req.params;
+  const { start_time, end_time } = req.body;
+
+  if (!start_time || !end_time) {
+    return res.status(400).json({ message: 'Data o ora mancanti' });
+  }
+
+  try {
+    // Controlla conflitti con altri appuntamenti del medesimo specialista
+    const { data: currentApp } = await supabase
+      .from('appointments')
+      .select('specialist_id')
+      .eq('id', appointmentId)
+      .single();
+
+    if (!currentApp) {
+      return res.status(404).json({ message: 'Appuntamento non trovato' });
+    }
+
+    const { data: conflicts, error: conflictErr } = await supabase
+      .from('appointments')
+      .select('*')
+      .eq('specialist_id', currentApp.specialist_id)
+      .neq('id', appointmentId)
+      .gte('start_time', start_time)
+      .lt('end_time', end_time);
+
+    if (conflictErr) throw conflictErr;
+    if (conflicts && conflicts.length > 0) {
+      return res.status(400).json({ message: 'Orario già occupato' });
+    }
+
+    // Aggiorna orario
+    const { data, error } = await supabase
+      .from('appointments')
+      .update({ start_time, end_time })
+      .eq('id', appointmentId)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    res.json(data);
+  } catch (err: any) {
+    console.error('Errore aggiornamento appuntamento:', err);
+    res.status(500).json({ message: 'Errore aggiornamento appuntamento', error: err.message });
+  }
+};
+

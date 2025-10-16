@@ -9,6 +9,7 @@ export interface Ebook {
   description: string;
   image_url?: string;
   category?: string;
+  author_id?: number;
 }
 
 @Injectable({ providedIn: 'root' })

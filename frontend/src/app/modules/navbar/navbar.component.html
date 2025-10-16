@@ -1,7 +1,7 @@
 <nav class="fixed top-0 left-0 w-full bg-[#FAFAFA]/80 backdrop-blur border-b border-gray-200 shadow-sm z-50">
   <div class="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
 
-    <!-- LOGO (cliccabile sempre, menu su mobile) -->
+    <!-- LOGO -->
     <div class="relative">
       <a 
         routerLink="/"
@@ -10,13 +10,12 @@
       >
         <img src="assets/img/logo.jpeg" alt="Logo" class="w-12 h-12"/>
         <span class="text-xl">UnPostoSicuro</span>
-        <!-- Icona freccia solo su mobile -->
         <svg class="md:hidden h-5 w-5 text-gray-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path [attr.d]="isMenuOpen ? 'M6 15l6-6 6 6' : 'M19 9l-7 7-7-7'" />
         </svg>
       </a>
 
-      <!-- MENU MOBILE a tendina -->
+      <!-- MENU MOBILE -->
       <div *ngIf="isMenuOpen" class="absolute left-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg md:hidden">
         <a routerLink="/test" class="block px-4 py-2 text-gray-700 hover:bg-[#5EADB1]/10" (click)="isMenuOpen=false">Test</a>
         <a routerLink="/chatbot" class="block px-4 py-2 text-gray-700 hover:bg-[#60BFB6]/10" (click)="isMenuOpen=false">Serena</a>
@@ -24,7 +23,6 @@
         <a routerLink="/specialists" class="block px-4 py-2 text-gray-700 hover:bg-[#60BFB6]/10" (click)="isMenuOpen=false">Specialisti</a>
       </div>
     </div>
-
 
     <!-- MENU DESKTOP -->
     <div class="hidden md:flex items-center space-x-6">
@@ -34,15 +32,23 @@
       <a routerLink="/specialists" class="text-gray-700 font-medium hover:text-[#60BFB6]">Specialisti</a>
     </div>
 
-    <!-- PROFILO + CARRELLO -->
+    <!-- PROFILO + CALENDARIO + CARRELLO -->
     <div class="relative flex items-center space-x-4">
       
+      <!-- Calendario (nuova icona) -->
+      <a routerLink="/my-appointments" class="text-gray-700 hover:text-[#5EADB1] transition-transform hover:scale-110">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+      </a>
+
       <!-- Carrello -->
       <a routerLink="/cart" class="relative text-gray-700 hover:text-[#5EADB1]">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2 9h14l-2-9M16 17a2 2 0 11-4 0 2 2 0 014 0z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2 9h14l-2-9M16 17a2 2 0 11-4 0 2 2 0 014 0z" />
         </svg>
-        <!-- Badge quantità articoli (opzionale) -->
         <span *ngIf="realCartItems?.length" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
           {{ realCartItems.length }}
         </span>
@@ -61,6 +67,7 @@
           
           <ng-container *ngIf="isLoggedIn(); else guest">
             <a routerLink="/profile" class="block px-4 py-2 text-gray-700 hover:bg-[#5EADB1]/10">Profilo</a>
+            <a routerLink="/my-appointments" class="block px-4 py-2 text-gray-700 hover:bg-[#60BFB6]/10">I miei appuntamenti</a>
             <button (click)="logout()" class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-[#5EADB1]/10">
               Logout
             </button>

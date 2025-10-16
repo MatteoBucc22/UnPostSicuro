@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getPendingAppointment = exports.cancelAppointment = exports.confirmAppointment = exports.createPendingAppointment = exports.getAppointmentsBySpecialist = void 0;
+exports.updateAppointment = exports.getAppointmentsByUser = exports.getPendingAppointment = exports.cancelAppointment = exports.confirmAppointment = exports.createPendingAppointment = exports.getAppointmentsBySpecialist = void 0;
 const supabaseClient_1 = require("../database/supabaseClient");
 const getAppointmentsBySpecialist = async (req, res) => {
     const { specialistId } = req.params;
@@ -124,4 +124,69 @@ const getPendingAppointment = async (req, res) => {
     }
 };
 exports.getPendingAppointment = getPendingAppointment;
+const getAppointmentsByUser = async (req, res) => {
+    const { userId } = req.params;
+    try {
+        const { data, error } = await supabaseClient_1.supabase
+            .from('appointments')
+            .select(`
+        *,
+        specialists!inner(id, name, surname)
+      `)
+            .eq('user_id', userId)
+            .order('start_time', { ascending: true });
+        if (error)
+            throw error;
+        console.log('Raw appointments from Supabase:', JSON.stringify(data, null, 2));
+        res.json(data);
+    }
+    catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Errore caricamento appuntamenti' });
+    }
+};
+exports.getAppointmentsByUser = getAppointmentsByUser;
+const updateAppointment = async (req, res) => {
+    const { appointmentId } = req.params;
+    const { start_time, end_time } = req.body;
+    if (!start_time || !end_time) {
+        return res.status(400).json({ message: 'Data o ora mancanti' });
+    }
+    try {
+        const { data: currentApp } = await supabaseClient_1.supabase
+            .from('appointments')
+            .select('specialist_id')
+            .eq('id', appointmentId)
+            .single();
+        if (!currentApp) {
+            return res.status(404).json({ message: 'Appuntamento non trovato' });
+        }
+        const { data: conflicts, error: conflictErr } = await supabaseClient_1.supabase
+            .from('appointments')
+            .select('*')
+            .eq('specialist_id', currentApp.specialist_id)
+            .neq('id', appointmentId)
+            .gte('start_time', start_time)
+            .lt('end_time', end_time);
+        if (conflictErr)
+            throw conflictErr;
+        if (conflicts && conflicts.length > 0) {
+            return res.status(400).json({ message: 'Orario già occupato' });
+        }
+        const { data, error } = await supabaseClient_1.supabase
+            .from('appointments')
+            .update({ start_time, end_time })
+            .eq('id', appointmentId)
+            .select()
+            .single();
+        if (error)
+            throw error;
+        res.json(data);
+    }
+    catch (err) {
+        console.error('Errore aggiornamento appuntamento:', err);
+        res.status(500).json({ message: 'Errore aggiornamento appuntamento', error: err.message });
+    }
+};
+exports.updateAppointment = updateAppointment;
 //# sourceMappingURL=appointment.controller.js.map
