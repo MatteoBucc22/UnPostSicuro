@@ -1,33 +1,39 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core'; // ❌ Rimosso ViewChild
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { CartService } from './cart.component.service';
 import { AuthService, AppUser } from '../auth/auth.services';
 import { HttpClientModule } from '@angular/common/http';
-import { SpecialistCardComponent } from '../specialist-card/specialist-card.component';
-import { Specialist } from '../specialist-card/specialist-detail.component.service';
+// ❌ Rimosse:
+// import { SpecialistCardComponent } from '../specialist-card/specialist-card.component';
+// import { Specialist } from '../specialist-card/specialist-detail.component.service';
+// import { AppointmentComponent } from '../appointment/appointment.component';
+
 import { CartPaypalComponent } from './cart-paypal.component';
-import { AppointmentComponent } from '../appointment/appointment.component';
 
 
 
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, HttpClientModule, CurrencyPipe, SpecialistCardComponent, CartPaypalComponent, AppointmentComponent],
+  // ❌ Rimosso SpecialistCardComponent e AppointmentComponent
+  imports: [CommonModule, FormsModule, RouterLink, HttpClientModule, CurrencyPipe, CartPaypalComponent], 
   templateUrl: './cart.component.html',
 })
 
 export class CartComponent implements OnInit {
-  @ViewChild('calendarComp') calendarComp?: AppointmentComponent;
-
-  get appointmentId(): string | undefined {
-    return this.calendarComp?.pendingAppointmentId;
-  }
+  // ❌ Rimosso:
+  // @ViewChild('calendarComp') calendarComp?: AppointmentComponent;
+  
+  // ❌ Rimosso:
+  // get appointmentId(): string | undefined {
+  //   return this.calendarComp?.pendingAppointmentId;
+  // }
 
   cartItems: any[] = [];
-  specialists: Specialist[] = [];
+  // ❌ Rimosso:
+  // specialists: Specialist[] = [];
   user?: AppUser | null;
   isLoading: boolean = true;
 
@@ -46,11 +52,11 @@ export class CartComponent implements OnInit {
   
 
   ngOnInit(): void {
-    // Carica specialisti
-    this.cartService.getSpecialists().subscribe({
-      next: data => this.specialists = data,
-      error: err => console.error('Errore caricamento specialisti:', err)
-    });
+    // ❌ Rimosso caricamento specialisti
+    // this.cartService.getSpecialists().subscribe({
+    //   next: data => this.specialists = data,
+    //   error: err => console.error('Errore caricamento specialisti:', err)
+    // });
 
     console.log(this.subtotal)
   
@@ -69,9 +75,9 @@ export class CartComponent implements OnInit {
     this.isLoading = true;
     this.cartService.getCart(userId).subscribe({
       next: items => {
+        // ❌ Rimosso 'selectedSpecialist: item.specialist_id || '' '
         this.cartItems = items.map(item => ({
-          ...item,
-          selectedSpecialist: item.specialist_id || ''
+          ...item
         }));
         this.isLoading = false;
       },
@@ -91,39 +97,43 @@ export class CartComponent implements OnInit {
       .subscribe(() => this.loadCart(this.user!.id));
   }
 
-  selectSpecialist(itemId: string, specialistId: string) {
-    if (!this.user?.id) return;
-    this.cartService.updateSpecialist(this.user.id, itemId, specialistId)
-      .subscribe(() => this.loadCart(this.user!.id));
-  }
-
-  selectSpecialistForItem(itemId: string, specialistId: string) {
-    if (!this.user?.id) return;
-    this.cartService.updateSpecialist(this.user.id, itemId, specialistId)
-      .subscribe(() => {
-        // aggiorna solo la selezione senza ricaricare tutto
-        const item = this.cartItems.find(i => i.id === itemId);
-        if (item) item.selectedSpecialist = specialistId;
-      });
-  }
-
-  onScroll(event: WheelEvent) {
-    const element = event.currentTarget as HTMLElement;
-    if (event.deltaY !== 0) {
-      event.preventDefault();
-      element.scrollLeft += event.deltaY;
-    }
-  }
+  // ❌ Rimosso:
+  // selectSpecialist(itemId: string, specialistId: string) {
+  //   if (!this.user?.id) return;
+  //   this.cartService.updateSpecialist(this.user.id, itemId, specialistId)
+  //     .subscribe(() => this.loadCart(this.user!.id));
+  // }
   
-  scrollLeft(id: string) {
-    const container = document.querySelector(`[data-id="${id}"]`);
-    if (container) container.scrollBy({ left: -300, behavior: 'smooth' });
-  }
+  // ❌ Rimosso:
+  // selectSpecialistForItem(itemId: string, specialistId: string) {
+  //   if (!this.user?.id) return;
+  //   this.cartService.updateSpecialist(this.user.id, itemId, specialistId)
+  //     .subscribe(() => {
+  //       const item = this.cartItems.find(i => i.id === itemId);
+  //       if (item) item.selectedSpecialist = specialistId;
+  //     });
+  // }
+
+  // ❌ Rimosso:
+  // onScroll(event: WheelEvent) {
+  //   const element = event.currentTarget as HTMLElement;
+  //   if (event.deltaY !== 0) {
+  //     event.preventDefault();
+  //     element.scrollLeft += event.deltaY;
+  //   }
+  // }
   
-  scrollRight(id: string) {
-    const container = document.querySelector(`[data-id="${id}"]`);
-    if (container) container.scrollBy({ left: 300, behavior: 'smooth' });
-  }
+  // ❌ Rimosso:
+  // scrollLeft(id: string) {
+  //   const container = document.querySelector(`[data-id="${id}"]`);
+  //   if (container) container.scrollBy({ left: -300, behavior: 'smooth' });
+  // }
+  
+  // ❌ Rimosso:
+  // scrollRight(id: string) {
+  //   const container = document.querySelector(`[data-id="${id}"]`);
+  //   if (container) container.scrollBy({ left: 300, behavior: 'smooth' });
+  // }
   
 
   checkout() {
@@ -133,7 +143,8 @@ export class CartComponent implements OnInit {
   
 
   get realCartItems(): any[] {
-    return this.cartItems.filter(item => item.ebook_id || item.specialist_id);
+    // Il carrello ora contiene solo ebook, quindi filtriamo solo su 'ebook_id'
+    return this.cartItems.filter(item => item.ebook_id); 
   }
 
   get isEmpty(): boolean {

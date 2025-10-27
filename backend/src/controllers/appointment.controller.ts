@@ -11,6 +11,7 @@ export const getAppointmentsBySpecialist = async (req: Request, res: Response) =
       .order('start_time', { ascending: true });
 
     if (error) throw error;
+    console.log(data)
     res.json(data);
   } catch (err: any) {
     console.error(err);

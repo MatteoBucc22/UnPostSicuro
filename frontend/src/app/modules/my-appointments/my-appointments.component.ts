@@ -1,15 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AppointmentService, Appointment } from '../appointment/appointment.component.service';
-import { AuthService } from '../auth/auth.services';
+import { AuthService, AppUser } from '../auth/auth.services';
 import { take } from 'rxjs/operators';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+// Importa i componenti necessari per la nuova sezione
+import { SpecialistCardComponent } from '../specialist-card/specialist-card.component';
+import { Specialist } from '../specialist-card/specialist-detail.component.service';
+import { AppointmentComponent } from '../appointment/appointment.component'; 
+import { CartService } from '../cart/cart.component.service';
+
 
 @Component({
   selector: 'app-my-appointments',
   standalone: true,
-  imports: [CommonModule, RouterLink, FormsModule],
+  // Assicurati che tutti i componenti usati nel template siano importati qui
+  imports: [CommonModule, RouterLink, FormsModule, SpecialistCardComponent, AppointmentComponent], 
   templateUrl: './my-appointments.component.html'
 })
 export class MyAppointmentsComponent implements OnInit {
@@ -22,18 +29,33 @@ export class MyAppointmentsComponent implements OnInit {
 
   loading = false;
   error?: string;
+  user?: AppUser | null; // Aggiunto per l'uso nel template di booking
+  
   // Filtri
   filterStatus: 'all' | 'booked' | 'completed' | 'blocked' | 'canceled' = 'all';
   filterDate?: string; // yyyy-MM-dd
 
+  // ────────────── Nuova Seduta ──────────────
+  isBookingNew: boolean = false;
+  specialists: Specialist[] = [];
+  selectedSpecialistId?: string | number;
+
 
   constructor(
     private appointmentService: AppointmentService,
-    private authService: AuthService
+    private authService: AuthService,
+    private cartService: CartService // Usato per caricare la lista degli specialisti
   ) {}
 
   ngOnInit() {
+    // Carica specialisti
+    this.cartService.getSpecialists().subscribe({
+      next: data => this.specialists = data,
+      error: err => console.error('Errore caricamento specialisti:', err)
+    });
+
     this.authService.currentAppUser.pipe(take(1)).subscribe(user => {
+      this.user = user;
       if (user?.id) this.loadAppointments(user.id);
     });
   }
@@ -67,7 +89,50 @@ export class MyAppointmentsComponent implements OnInit {
   }
 
 
-  // ────────────── Modifica appuntamento ──────────────
+  // ────────────── Nuova Seduta Metodi ──────────────
+  toggleBookingMode() {
+    this.isBookingNew = !this.isBookingNew;
+    // Resetta lo stato quando si chiude il pannello di booking
+    if (!this.isBookingNew) {
+      this.selectedSpecialistId = undefined;
+    }
+  }
+
+  getSpecialistNameById(id: string | number): string {
+    const specialist = this.specialists.find(s => s.id == id);
+    return specialist ? `${specialist.name} ${specialist.surname}` : 'Specialista Sconosciuto';
+  }
+
+  onNewAppointmentBooked(newAppointment: Appointment) {
+    this.isBookingNew = false;
+    this.selectedSpecialistId = undefined;
+    alert('✅ Nuova seduta prenotata con successo');
+    // Ricarica la lista degli appuntamenti
+    if (this.user?.id) {
+      this.loadAppointments(this.user.id);
+    }
+  }
+
+  // ────────────── Utility per lo scroll ──────────────
+  onScroll(event: WheelEvent) {
+    const element = event.currentTarget as HTMLElement;
+    if (event.deltaY !== 0) {
+      event.preventDefault();
+      element.scrollLeft += event.deltaY;
+    }
+  }
+  
+  scrollLeft(dataId: string) {
+    const container = document.querySelector(`[data-id="${dataId}"]`);
+    if (container) container.scrollBy({ left: -300, behavior: 'smooth' });
+  }
+  
+  scrollRight(dataId: string) {
+    const container = document.querySelector(`[data-id="${dataId}"]`);
+    if (container) container.scrollBy({ left: 300, behavior: 'smooth' });
+  }
+
+  // ────────────── Modifica appuntamento (Logica esistente) ──────────────
   onDateChange(app: any) {
     if (!app.newDate || !app.specialist_id) return;
     const date = new Date(app.newDate);
@@ -161,12 +226,10 @@ export class MyAppointmentsComponent implements OnInit {
 
   // ────────────── Utility ──────────────
   getSpecialistName(app: any): string {
-    const specialist = app.specialists; // prendi il primo elemento dell'array
+    const specialist = app.specialists;
     return specialist ? `${specialist.name} ${specialist.surname}` : 'Specialista';
   }
   
-  
-
   translateStatus(status: string): string {
     switch (status) {
       case 'booked': return 'Confermato';

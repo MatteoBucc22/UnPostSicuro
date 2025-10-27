@@ -1,5 +1,5 @@
 // calendar.component.ts
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -17,6 +17,8 @@ import { AppointmentService, Appointment } from './appointment.component.service
 export class AppointmentComponent implements OnInit, OnDestroy {
   @Input() specialistId?: number;
   @Input() userId?: string;
+  @Output() appointmentBooked = new EventEmitter<Appointment>();
+
 
   selectedDate?: Date;
   selectedTime?: string;
@@ -140,40 +142,39 @@ export class AppointmentComponent implements OnInit, OnDestroy {
 
   bookAppointment() {
     if (!this.selectedDate || !this.selectedTime || !this.userId || !this.specialistId) return;
-
+  
+    const [hour, minute] = this.selectedTime.split(':').map(Number);
     const start = new Date(this.selectedDate);
-    const [hours, minutes] = this.selectedTime.split(':').map(Number);
-    start.setHours(hours, minutes);
-
-    const end = new Date(start);
-    end.setHours(end.getHours() + 1);
-
+    start.setHours(hour, minute, 0, 0);
+    const end = new Date(start.getTime() + 60 * 60 * 1000);
+  
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
-
-    this.subs.add(
-      this.appointmentService.bookAppointment(
-        this.userId,
-        this.specialistId,
-        start.toISOString(),
-        end.toISOString(),
-        'blocked',
-        expiresAt
-      ).subscribe({
-        next: (res: any) => {
-          const appointment = res[0];
-          this.pendingAppointmentId = appointment.id;
-
-          // Salva localStorage
-          localStorage.setItem(`pendingAppointment_${this.userId}`, JSON.stringify(appointment));
-
-          alert('🕒 Appuntamento bloccato per 10 minuti! Completa il pagamento per confermare.');
-
-          this.selectedDate && this.generateAvailableSlots(this.selectedDate);
-          this.timerSeconds = 10 * 60;
-          this.startTimer();
-        },
-        error: err => alert(err.error?.message || 'Errore durante la prenotazione')
-      })
-    );
+  
+    this.appointmentService.bookAppointment(
+      this.userId,
+      this.specialistId,
+      start.toISOString(), // ✅ conversione corretta in UTC
+      end.toISOString(),
+      'blocked',
+      expiresAt
+    ).subscribe({
+      next: (res: any) => {
+        const appointment = res[0];
+        this.pendingAppointmentId = appointment.id;
+      
+        localStorage.setItem(`pendingAppointment_${this.userId}`, JSON.stringify(appointment));
+      
+        // ✅ emetti l’evento verso il componente padre
+        this.appointmentBooked.emit(appointment);
+      
+        alert('🕒 Appuntamento bloccato per 10 minuti! Completa il pagamento per confermare.');
+      
+        this.selectedDate && this.generateAvailableSlots(this.selectedDate);
+        this.timerSeconds = 10 * 60;
+        this.startTimer();
+      },      
+      error: err => alert(err.error?.message || 'Errore durante la prenotazione')
+    });
   }
+  
 }

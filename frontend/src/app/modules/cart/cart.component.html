@@ -1,12 +1,10 @@
 <div class="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-10">
   
-  <!-- SEZIONE PRINCIPALE (EBOOK + SPECIALISTI) -->
   <div class="lg:col-span-2">
     <h1 class="text-4xl font-extrabold text-[#5EADB1] mb-10 tracking-tight">
       Il tuo carrello
     </h1>
 
-    <!-- Carrello vuoto -->
     <div *ngIf="isEmpty" class="text-center bg-white/70 backdrop-blur-lg rounded-2xl shadow-lg p-12 border border-gray-200">
       <h2 class="text-2xl font-semibold text-gray-700 mb-4">Il carrello è vuoto</h2>
       <p class="text-gray-500 mb-8">Aggiungi ebook o specialisti per iniziare.</p>
@@ -14,17 +12,15 @@
         <a routerLink="/ebooks" class="px-8 py-3 bg-[#5EADB1] text-white font-semibold rounded-xl hover:bg-[#4c9397] transition-all shadow-md">
           📚 Esplora i nostri Ebook
         </a>
-        <a routerLink="/specialists" class="px-8 py-3 bg-[#5EADB1] text-white font-semibold rounded-xl hover:bg-[#4c9397] transition-all shadow-md">
-          👩‍⚕️ Esplora i nostri Specialisti
+        <a routerLink="/my-appointments" class="px-8 py-3 bg-[#5EADB1] text-white font-semibold rounded-xl hover:bg-[#4c9397] transition-all shadow-md">
+          👩‍⚕️ Prenota una seduta
         </a>
       </div>
     </div>
 
-    <!-- Lista articoli -->
     <div *ngFor="let item of realCartItems" 
          class="bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl p-8 mb-12 border border-gray-100 hover:shadow-2xl transition-all duration-300">
 
-      <!-- Info Ebook -->
       <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-8">
         <div class="flex items-center gap-6">
           <img [src]="item.ebooks?.image_url" 
@@ -42,56 +38,11 @@
         </button>
       </div>
 
-      <!-- Sezione specialisti -->
-      <div *ngIf="item.ebooks" class="mt-4">
-        <h3 class="text-lg font-semibold text-gray-700 mb-3 flex items-center gap-2">
-          <span>👩‍⚕️</span> Seleziona uno specialista per questo ebook
-        </h3>
-
-        <div class="relative group">
-          <button (click)="scrollLeft(item.id)"
-                  class="absolute left-0 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white shadow-md p-2 rounded-full hidden group-hover:block transition">
-            ←
-          </button>
-
-          <div
-            class="flex gap-6 overflow-x-auto scroll-smooth pb-4 no-scrollbar transition-all duration-300"
-            [attr.data-id]="item.id"
-            (wheel)="onScroll($event)"
-          >
-            <div *ngFor="let s of specialists"
-                (click)="selectSpecialistForItem(item.id, s.id)"
-                [class.ring-4]="item.selectedSpecialist === s.id"
-                [class.ring-[#5EADB1]]="item.selectedSpecialist === s.id"
-                class="flex-shrink-0 w-72 cursor-pointer transition-transform duration-300 hover:scale-105 hover:shadow-lg rounded-2xl">
-              <app-specialist-card [specialist]="s"></app-specialist-card>
-            </div>
-          </div>
-
-          <button (click)="scrollRight(item.id)"
-                  class="absolute right-0 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white shadow-md p-2 rounded-full hidden group-hover:block transition">
-            →
-          </button>
-        </div>
-
-        <p *ngIf="item.selectedSpecialist" class="text-green-600 mt-4 font-medium">
-          ✅ Specialista selezionato correttamente!
-        </p>
       </div>
-      <app-calendar
-        *ngIf="item.selectedSpecialist && user"
-        [specialistId]="item.selectedSpecialist"
-        [userId]="user.id"
-        #calendarComp>
-      </app-calendar>
-    
-
-    </div>
   </div>
 
 
 
-  <!-- SIDEBAR -->
   <aside class="bg-white/90 backdrop-blur-md shadow-xl rounded-2xl p-6 h-fit sticky top-6 border border-gray-100">
     <h2 class="text-2xl font-semibold text-gray-800 mb-6">Riepilogo ordine</h2>
 
@@ -118,9 +69,7 @@
       *ngIf="user?.id"
       [amount]="totalWithVAT"
       [userId]="user!.id"
-      [appointmentId]="appointmentId">
-    </app-cart-paypal>
-
+      [appointmentId]="undefined"> </app-cart-paypal>
 
 
     <p class="text-sm text-gray-500 text-center mt-4">

@@ -12,6 +12,7 @@ const getAppointmentsBySpecialist = async (req, res) => {
             .order('start_time', { ascending: true });
         if (error)
             throw error;
+        console.log(data);
         res.json(data);
     }
     catch (err) {
