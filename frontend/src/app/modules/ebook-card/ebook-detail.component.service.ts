@@ -13,7 +13,7 @@ export interface Ebook {
 
 @Injectable({ providedIn: 'root' })
 export class EbookService {
-  private apiUrl = 'http://localhost:3000/ebooks';
+  private apiUrl = 'https://unpostsicuro.onrender.com/ebooks';
 
   constructor(private http: HttpClient) {}
 

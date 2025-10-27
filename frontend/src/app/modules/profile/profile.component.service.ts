@@ -17,7 +17,7 @@ export interface UserProfile {
 
 @Injectable({ providedIn: 'root' })
 export class ProfileService {
-  private apiUrl = 'http://localhost:3000/users';
+  private apiUrl = 'https://unpostsicuro.onrender.com/users';
 
   constructor(private http: HttpClient) {}
 
