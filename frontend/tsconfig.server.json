@@ -1,10 +1,10 @@
 {
-  "extends": "./tsconfig.app.json",
+  "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/server",
     "target": "es2022",
-    "module": "esnext",  
-    "moduleResolution": "bundler", 
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "types": ["node"]
   },
   "files": [
@@ -13,5 +13,9 @@
   ],
   "include": [
     "src/**/*.d.ts"
+  ],
+  "exclude": [
+    "src/main.ts",
+    "src/app/**/*.*"
   ]
 }
