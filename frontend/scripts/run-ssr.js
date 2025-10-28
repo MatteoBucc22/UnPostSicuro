@@ -54,7 +54,18 @@ if (!target) {
   } else {
     console.error(`\nDirectory not found: ${root}`);
   }
-  process.exit(1);
+  console.error('\nFalling back to static server...');
+  const fallback = join(projectRoot, 'scripts', 'serve-static.js');
+  if (!existsSync(fallback)) {
+    console.error('Fallback static server not found at', fallback);
+    process.exit(1);
+  }
+  const child = spawn(process.execPath, [fallback], {
+    stdio: 'inherit',
+    env: process.env,
+  });
+  child.on('exit', (code) => process.exit(code ?? 0));
+  return;
 }
 
 console.log('Starting SSR with:', target);
