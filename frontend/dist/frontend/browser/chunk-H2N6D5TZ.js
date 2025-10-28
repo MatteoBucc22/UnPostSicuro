@@ -1,0 +1,1 @@
+import{C as e,F as r,Lb as s}from"./chunk-JXKQ7VXO.js";var a=class t{constructor(i){this.http=i}getSpecialist(i){return this.http.get(`/api/specialists/${i}`)}getAllSpecialists(){return this.http.get("/api/specialists")}static \u0275fac=function(p){return new(p||t)(r(s))};static \u0275prov=e({token:t,factory:t.\u0275fac,providedIn:"root"})};export{a};

@@ -3,3 +3,5 @@ node_modules/
 npm-debug.log
 frontend/.angular/cache
 backend/dist
+*.env
+.env
