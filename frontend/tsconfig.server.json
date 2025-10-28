@@ -1,13 +1,17 @@
 {
-    "extends": "./tsconfig.app.json",
-    "compilerOptions": {
-      "outDir": "./out-tsc/server",
-      "target": "ES2022",
-      "module": "NodeNext",
-      "moduleResolution": "NodeNext",
-      "types": ["node"]
-    },
-    "files": [
-      "src/main.server.ts"
-    ]
-  }
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/server",
+    "target": "es2022",
+    "module": "esnext",  
+    "moduleResolution": "bundler", 
+    "types": ["node"]
+  },
+  "files": [
+    "src/main.server.ts",
+    "src/server.ts"
+  ],
+  "include": [
+    "src/**/*.d.ts"
+  ]
+}
