@@ -7,7 +7,7 @@
     "build": "ng build --configuration production && ng run frontend:server",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:frontend": "node dist/frontend/server.mjs"
+    "serve:ssr:frontend": "node scripts/run-ssr.js"
   },
   "prettier": {
     "printWidth": 100,
