@@ -15,9 +15,16 @@ if (!existsSync(browserDir)) {
 const app = express();
 app.use(express.static(browserDir, { index: false, maxAge: '1y' }));
 
-// SPA fallback to index.html (pathless middleware avoids path-to-regexp)
+// SPA fallback to index.html or index.csr.html (pathless middleware avoids path-to-regexp)
 app.use((req, res) => {
-  res.sendFile(join(browserDir, 'index.html'));
+  const indexHtml = existsSync(join(browserDir, 'index.html'))
+    ? 'index.html'
+    : (existsSync(join(browserDir, 'index.csr.html')) ? 'index.csr.html' : null);
+  if (!indexHtml) {
+    res.status(500).send('index.html not found in browser output');
+    return;
+  }
+  res.sendFile(join(browserDir, indexHtml));
 });
 
 const port = process.env.PORT || 4000;

@@ -6,10 +6,14 @@ const { spawn } = require('node:child_process');
 
 const projectRoot = __dirname ? join(__dirname, '..') : process.cwd();
 const candidates = [
-  join(projectRoot, 'dist', 'frontend', 'server.mjs'),
+  // Common Angular SSR outputs (v17+)
+  join(projectRoot, 'dist', 'frontend', 'server', 'main.server.mjs'),
   join(projectRoot, 'dist', 'frontend', 'server', 'server.mjs'),
   join(projectRoot, 'dist', 'frontend', 'server', 'main.mjs'),
   join(projectRoot, 'dist', 'frontend', 'server', 'index.mjs'),
+  // Legacy or alternative locations
+  join(projectRoot, 'dist', 'frontend', 'main.server.mjs'),
+  join(projectRoot, 'dist', 'frontend', 'server.mjs'),
   join(projectRoot, 'dist', 'frontend', 'ssr', 'server.mjs'),
   join(projectRoot, 'dist', 'frontend', 'ssr', 'main.mjs'),
   join(projectRoot, 'dist', 'frontend', 'browser', 'server.mjs'),
