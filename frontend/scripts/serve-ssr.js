@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 /* eslint-disable no-console */
 const express = require('express');
+// Ensure JIT compiler is available for any runtime compilation needs
+require('@angular/compiler');
 const { join } = require('node:path');
 const { existsSync } = require('node:fs');
 const { createNodeRequestHandler } = require('@angular/ssr/node');
@@ -22,9 +24,9 @@ if (existsSync(browserDir)) {
   app.use(express.static(browserDir, { index: false, maxAge: '1y' }));
 }
 
-// Angular SSR request handler
+// Angular SSR request handler (pathless middleware to avoid path-to-regexp issues)
 let nodeHandler;
-app.all('*', async (req, res, next) => {
+app.use(async (req, res, next) => {
   try {
     if (!nodeHandler) {
       nodeHandler = await createNodeRequestHandler({ buildPath: serverDir });
