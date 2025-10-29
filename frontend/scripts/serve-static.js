@@ -15,8 +15,8 @@ if (!existsSync(browserDir)) {
 const app = express();
 app.use(express.static(browserDir, { index: false, maxAge: '1y' }));
 
-// SPA fallback to index.html (avoid path-to-regexp by using a regex route)
-app.get(/.*/, (req, res) => {
+// SPA fallback to index.html (pathless middleware avoids path-to-regexp)
+app.use((req, res) => {
   res.sendFile(join(browserDir, 'index.html'));
 });
 
