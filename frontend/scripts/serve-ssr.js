@@ -3,7 +3,7 @@
 const express = require('express');
 const { join } = require('node:path');
 const { existsSync } = require('node:fs');
-const { createRequestHandler } = require('@angular/ssr/express');
+const { createNodeRequestHandler } = require('@angular/ssr/node');
 
 const projectRoot = __dirname ? join(__dirname, '..') : process.cwd();
 const distRoot = join(projectRoot, 'dist', 'frontend');
@@ -23,7 +23,17 @@ if (existsSync(browserDir)) {
 }
 
 // Angular SSR request handler
-app.get('*', createRequestHandler({ buildPath: serverDir }));
+let nodeHandler;
+app.all('*', async (req, res, next) => {
+  try {
+    if (!nodeHandler) {
+      nodeHandler = await createNodeRequestHandler({ buildPath: serverDir });
+    }
+    return nodeHandler(req, res, next);
+  } catch (err) {
+    next(err);
+  }
+});
 
 const port = process.env.PORT || 4000;
 app.listen(port, () => {
