@@ -34,7 +34,7 @@ const serverBundlePath = join(serverDir, 'server.js');
 if (!existsSync(serverMainPath) && !existsSync(serverBundlePath)) {
   console.warn('SSR bundle not found. Falling back to static hosting from browser output.');
   if (existsSync(browserDir)) {
-    app.use(express.static(browserDir, { index: false, maxAge: '1y' }));
+    app.use(express.static(browserDir, { index: false, maxAge: '1y', redirect: false }));
     app.use((req, res) => {
       const indexHtml = existsSync(join(browserDir, 'index.html'))
         ? 'index.html'
