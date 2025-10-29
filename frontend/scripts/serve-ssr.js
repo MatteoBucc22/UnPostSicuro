@@ -5,7 +5,8 @@ const express = require('express');
 require('@angular/compiler');
 const { join } = require('node:path');
 const { existsSync } = require('node:fs');
-const { createNodeRequestHandler } = require('@angular/ssr/node');
+const ssrNode = require('@angular/ssr/node');
+const createNodeRequestHandler = ssrNode && (ssrNode.createNodeRequestHandler || ssrNode.default || ssrNode);
 
 const projectRoot = __dirname ? join(__dirname, '..') : process.cwd();
 const distRoot = join(projectRoot, 'dist', 'frontend');
@@ -29,9 +30,24 @@ let nodeHandler;
 app.use(async (req, res, next) => {
   try {
     if (!nodeHandler) {
-      const created = await createNodeRequestHandler({ buildPath: serverDir });
-      nodeHandler = created;
+      // Try to construct the handler using @angular/ssr helper first
+      if (typeof createNodeRequestHandler === 'function') {
+        const created = await createNodeRequestHandler({ buildPath: serverDir });
+        nodeHandler = created;
+      } else {
+        // Fallback: attempt to import the built server bundle directly
+        // Common export shapes seen across Angular versions
+        const serverBundlePath = join(serverDir, 'main.js');
+        // eslint-disable-next-line global-require, import/no-dynamic-require
+        const serverExports = require(serverBundlePath);
+        nodeHandler = serverExports.default
+          || serverExports.handle
+          || serverExports.handler
+          || serverExports.app
+          || serverExports;
+      }
     }
+
     if (typeof nodeHandler === 'function') {
       return nodeHandler(req, res, next);
     }
@@ -41,7 +57,11 @@ app.use(async (req, res, next) => {
     if (nodeHandler && typeof nodeHandler.handler === 'function') {
       return nodeHandler.handler(req, res, next);
     }
-    throw new TypeError('Invalid SSR handler returned by createNodeRequestHandler');
+    if (nodeHandler && typeof nodeHandler.app === 'function') {
+      return nodeHandler.app(req, res, next);
+    }
+
+    throw new TypeError('Invalid SSR handler returned; expected function or { handle }');
   } catch (err) {
     next(err);
   }
