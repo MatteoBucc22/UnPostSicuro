@@ -29,9 +29,19 @@ let nodeHandler;
 app.use(async (req, res, next) => {
   try {
     if (!nodeHandler) {
-      nodeHandler = await createNodeRequestHandler({ buildPath: serverDir });
+      const created = await createNodeRequestHandler({ buildPath: serverDir });
+      nodeHandler = created;
     }
-    return nodeHandler(req, res, next);
+    if (typeof nodeHandler === 'function') {
+      return nodeHandler(req, res, next);
+    }
+    if (nodeHandler && typeof nodeHandler.handle === 'function') {
+      return nodeHandler.handle(req, res, next);
+    }
+    if (nodeHandler && typeof nodeHandler.handler === 'function') {
+      return nodeHandler.handler(req, res, next);
+    }
+    throw new TypeError('Invalid SSR handler returned by createNodeRequestHandler');
   } catch (err) {
     next(err);
   }
