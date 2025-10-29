@@ -28,16 +28,39 @@ if (existsSync(browserDir)) {
 
 // Angular SSR request handler - initialize before server starts
 const serverMainPath = join(serverDir, 'main.js');
-if (!existsSync(serverMainPath)) {
-  console.error(`Server main.js not found at: ${serverMainPath}`);
-  process.exit(1);
+const serverBundlePath = join(serverDir, 'server.js');
+
+// If SSR bundle is missing, fall back to static hosting of the browser build
+if (!existsSync(serverMainPath) && !existsSync(serverBundlePath)) {
+  console.warn('SSR bundle not found. Falling back to static hosting from browser output.');
+  if (existsSync(browserDir)) {
+    app.use(express.static(browserDir, { index: false, maxAge: '1y' }));
+    app.use((req, res) => {
+      const indexHtml = existsSync(join(browserDir, 'index.html'))
+        ? 'index.html'
+        : (existsSync(join(browserDir, 'index.csr.html')) ? 'index.csr.html' : null);
+      if (!indexHtml) {
+        res.status(500).send('index.html not found in browser output');
+        return;
+      }
+      res.sendFile(join(browserDir, indexHtml));
+    });
+  } else {
+    app.use((req, res) => res.status(500).send('Browser build not found.'));
+  }
+
+  const port = process.env.PORT || 4000;
+  app.listen(port, () => {
+    console.log(`Serving static build from ${browserDir} on port ${port}`);
+  });
+  // Stop SSR-specific initialization here
+  return;
 }
 
 // Try multiple methods to initialize SSR handler
 let nodeHandler;
 
 // Method 1: Load reqHandler from server.js bundle (most reliable)
-const serverBundlePath = join(serverDir, 'server.js');
 if (existsSync(serverBundlePath)) {
   try {
     // eslint-disable-next-line global-require, import/no-dynamic-require
